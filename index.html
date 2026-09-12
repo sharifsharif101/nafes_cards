@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير متابعة اختبارات نافس 1447هـ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+
+  <header class="masthead">
+    <div class="masthead-meta">المملكة العربية السعودية — وزارة التعليم</div>
+    <h1>تقرير متابعة الاختبارات الوطنية نافس</h1>
+    <p>للعام الدراسي 1447هـ — إعداد: الأستاذ بدر عبدالله الصبي</p>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="progress-text" id="progress-text">لم تبدأ التعبئة بعد</span>
+    </div>
+  </header>
+
+  <div class="toolbar no-print">
+    <button id="btn-print" class="btn" type="button">طباعة التقرير</button>
+    <button id="btn-clear" class="btn btn-danger" type="button">مسح البيانات</button>
+    <span class="save-note" id="save-note"></span>
+  </div>
+
+  <nav class="tabs no-print" id="tabs"></nav>
+
+  <!-- الأقسام تُبنى تلقائيًا من js/config.js بواسطة js/app.js -->
+  <main id="report"></main>
+
+  <footer class="page-footer">النسب تُحسب تلقائيًا عند إدخال البيانات ✓</footer>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/calculations.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
