@@ -414,6 +414,30 @@ textarea::placeholder {
   border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.15);
 }
 
+/* ---------- بطاقات الرسوم البيانية (ChartEngine) ---------- */
+.chart-card {
+  background: var(--ui-card-bg); border: 1px solid var(--ui-border);
+  border-radius: var(--radius-card); padding: 20px;
+  margin-top: 16px;
+}
+.chart-card .chart-title {
+  margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; color: var(--text-main);
+}
+.chart-card .chart-description {
+  margin: 0 0 14px; font-size: .82rem; color: var(--text-muted, #6b7a8d); line-height: 1.6;
+}
+.chart-box {
+  position: relative; width: 100%;
+}
+.chart-box canvas { display: block; }
+.chart-empty-msg {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; min-height: 120px;
+  border: 1px dashed var(--ui-border-dark); border-radius: 10px;
+  color: var(--text-muted, #6b7a8d); font-size: .9rem; text-align: center;
+  padding: 12px;
+}
+
 /* ---------- الملاحظات والتوصيات وفريق العمل ---------- */
 .rec-team-wrap {
   display: flex; flex-direction: column; gap: 24px;
@@ -566,6 +590,7 @@ textarea::placeholder {
 
 /* ---------- تصميم غلاف التقرير للصفحة الأولى A4 ---------- */
 .cover-page-wrapper {
+  display: none;
   background: var(--ui-card-bg);
   border: 1px solid var(--ui-border);
   border-radius: var(--radius-card);
@@ -857,6 +882,16 @@ textarea::placeholder {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+  }
+
+  /* تبويبات أُبرزت قبل الطباعة كي تُرسم الرسوم المخفية بعرض حقيقي */
+  .print-force-visible { display: block !important; }
+
+  /* بطاقات الرسوم لا تُقسم بين صفحتي الطباعة */
+  .chart-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    box-shadow: none !important;
   }
 
   .card, .rec-box {

@@ -42,6 +42,8 @@
       document.querySelectorAll(".tab-pane").forEach(p => {
         p.classList.toggle("active", p.dataset.tab === tabId);
       });
+      // إعادة رسم الرسوم البيانية في التبويب المفتوح (كانت عرضها صفر وهو مخفي)
+      if (window.ChartEngine) ChartEngine.onTabSwitch();
       if (save) {
         StorageManager.saveActiveTab(tabId);
       }
@@ -120,6 +122,8 @@
       this.updateSubjectCalcs(values);
       this.updateSubdomainCalcs(values);
       this.updateProgress();
+      // تحديث الرسوم البيانية بنفس البيانات المحصّلة
+      if (window.ChartEngine) ChartEngine.update(values);
       this.save(values, silent);
     },
 
@@ -165,7 +169,7 @@
         if (val) {
           principalNode.textContent = val.startsWith("مديرة المدرسة") ? val : ("مديرة المدرسة / " + val);
         } else {
-          principalNode.textContent = "مديرة المدرسة / مستورة العجمي";
+          principalNode.textContent = "";
         }
       }
 

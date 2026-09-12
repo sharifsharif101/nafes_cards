@@ -12,6 +12,28 @@ function el(tag, className, text) {
   return node;
 }
 
+// بطاقة رسم بياني: كانفس يديره ChartEngine + رسالة إرشادية عند غياب البيانات
+function makeChartCard(section, spec, ctx) {
+  const card = el("div", "chart-card");
+  card.append(el("h3", "chart-title", spec.title));
+  if (spec.description) card.append(el("p", "chart-description", spec.description));
+
+  const box = el("div", "chart-box");
+  const rows = ctx && ctx.items ? ctx.items.length : 3;
+  box.style.height = (spec.height || (rows * 48 + 110)) + "px";
+
+  const canvas = document.createElement("canvas");
+  canvas.id = spec.idPrefix ? spec.idPrefix + ctx.id : spec.id;
+  canvas.dataset.chartType = spec.type;
+  canvas.dataset.sectionId = section.id;
+  if (ctx && ctx.id) canvas.dataset.subId = ctx.id;
+
+  const msg = el("div", "chart-empty-msg", spec.emptyText || "أدخلي البيانات لعرض الرسم البياني");
+  box.append(canvas, msg);
+  card.append(box);
+  return card;
+}
+
 const SECTION_BUILDERS = {
 
   // قسم حقول إدخال (شبكة حقول)
@@ -151,6 +173,11 @@ const SECTION_BUILDERS = {
 
       wrap.append(card);
     });
+
+    // بطاقة الرسوم البيانية أسفل بطاقات المواد (تقرأ من نفس حقول الإدخال)
+    if (section.charts) {
+      section.charts.forEach(spec => wrap.append(makeChartCard(section, spec)));
+    }
     return wrap;
   },
 
@@ -246,6 +273,11 @@ const SECTION_BUILDERS = {
 
       table.append(tbody);
       card.append(table);
+
+      // رسم مقارنة المجالات الفرعية داخل بطاقة كل مادة
+      if (section.charts) {
+        section.charts.forEach(spec => card.append(makeChartCard(section, spec, sub)));
+      }
       wrap.append(card);
     });
 
