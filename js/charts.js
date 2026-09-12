@@ -124,11 +124,22 @@
           if (v === null || v === undefined) return;
           const txt = round1(v) + "%";
           if (stacked) {
-            if (v < 10) return; // الشرائح الضيقة لا تتسع للقيمة
-            ctx.fillStyle = "#ffffff";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(txt, bar.x, bar.y);
+            // نحصر القيمة داخل الجزء المرئي من الشريحة؛ إن لم تتسع
+            // نرسمها فوق الشريحة بلون داكن حتى لا تختفي على الخلفية البيضاء
+            const area = chart.chartArea;
+            const visibleTop = Math.max(bar.y - bar.height / 2, area.top);
+            const visibleBottom = Math.min(bar.y + bar.height / 2, area.bottom);
+            if (visibleBottom - visibleTop >= 18 && v >= 10) {
+              ctx.fillStyle = "#ffffff";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(txt, bar.x, (visibleTop + visibleBottom) / 2);
+            } else if (v >= 3) {
+              ctx.fillStyle = "#33475b";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "bottom";
+              ctx.fillText(txt, bar.x, visibleTop - 4);
+            }
           } else {
             const horizontal = chart.options.indexAxis === "y";
             ctx.fillStyle = "#33475b";
