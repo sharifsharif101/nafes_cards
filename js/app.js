@@ -77,9 +77,20 @@
       const printBtn = document.getElementById("btn-print");
       const exportPdfBtn = document.getElementById("btn-export-pdf");
       const clearBtn = document.getElementById("btn-clear");
-      if (printBtn) printBtn.addEventListener("click", () => window.print());
+      const toggleCoverBtn = document.getElementById("btn-toggle-cover");
+      const coverWrapper = document.getElementById("cover-page-wrapper");
+
+      if (printBtn) printBtn.addEventListener("click", () => this.exportPDF());
       if (exportPdfBtn) exportPdfBtn.addEventListener("click", () => this.exportPDF());
       if (clearBtn) clearBtn.addEventListener("click", () => this.clearAll());
+
+      if (toggleCoverBtn && coverWrapper) {
+        toggleCoverBtn.addEventListener("click", () => {
+          const isCollapsed = coverWrapper.classList.toggle("collapsed");
+          toggleCoverBtn.textContent = isCollapsed ? "عرض المعاينة" : "إخفاء المعاينة";
+        });
+      }
+
       document.addEventListener("input", () => this.refresh(false));
 
       // حفظ موضع التمرير تلقائياً عبر StorageManager
@@ -103,12 +114,70 @@
 
     refresh(silent = false) {
       const values = this.collectValues();
+      this.updateCoverPage(values);
       this.updateStats(values);
       this.updateCompare(values);
       this.updateSubjectCalcs(values);
       this.updateSubdomainCalcs(values);
       this.updateProgress();
       this.save(values, silent);
+    },
+
+    updateCoverPage(values) {
+      const schoolNode = document.getElementById("cover-school-display");
+      const gradeNode = document.getElementById("cover-grade-display");
+      const principalNode = document.getElementById("cover-principal-display");
+      const yearNode = document.getElementById("cover-year-display");
+
+      // مزامنة ثنائية بين خانة مديرة المدرسة في البيانات الأساسية وفريق العمل
+      const pBasic = document.getElementById("principal");
+      const pTeam = document.getElementById("team-principal");
+      if (pBasic && pTeam) {
+        if (document.activeElement === pBasic) {
+          pTeam.value = pBasic.value;
+        } else if (document.activeElement === pTeam) {
+          pBasic.value = pTeam.value;
+        } else {
+          if (pBasic.value === "" && pTeam.value !== "") pBasic.value = pTeam.value;
+          else if (pTeam.value === "" && pBasic.value !== "") pTeam.value = pBasic.value;
+        }
+      }
+
+      // 1) اسم المدرسة
+      if (schoolNode) {
+        const val = (values["school"] || "").trim();
+        schoolNode.textContent = val || "الابتدائية الثانية والستون بعد الثلاثمائة ٣٦٢";
+      }
+
+      // 2) الصف الدراسي
+      if (gradeNode) {
+        const val = (values["grade"] || "").trim();
+        if (val) {
+          gradeNode.textContent = val.startsWith("للصف") ? val : ("للصف " + val);
+        } else {
+          gradeNode.textContent = "للصف السادس الابتدائي";
+        }
+      }
+
+      // 3) مديرة المدرسة
+      if (principalNode) {
+        const val = (values["principal"] || values["team-principal"] || "").trim();
+        if (val) {
+          principalNode.textContent = val.startsWith("مديرة المدرسة") ? val : ("مديرة المدرسة / " + val);
+        } else {
+          principalNode.textContent = "مديرة المدرسة / مستورة العجمي";
+        }
+      }
+
+      // 4) العام الدراسي
+      if (yearNode) {
+        const val = (values["year"] || "").trim();
+        if (val) {
+          yearNode.textContent = val.endsWith("هـ") ? val : (val + "هـ");
+        } else {
+          yearNode.textContent = "١٤٤٦هـ";
+        }
+      }
     },
 
     updateStats(values) {

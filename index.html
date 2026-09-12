@@ -11,6 +11,54 @@
 <body>
 <div class="container">
 
+  <!-- صفحة الغلاف الخاصة بالتصدير والطباعة A4 (الصفحة الأولى) -->
+  <div class="cover-page-wrapper" id="cover-page-wrapper">
+    <div class="cover-preview-bar no-print">
+      <span class="cover-preview-title">📄 غلاف التقرير (الصفحة الأولى A4 عند تصدير PDF)</span>
+      <button type="button" class="btn-toggle-cover" id="btn-toggle-cover">إخفاء المعاينة</button>
+    </div>
+    <div class="cover-page" id="cover-page-container">
+      <!-- أشكال الغلاف الهندسية (CSS بالكامل بدل الصورة) -->
+      <div class="cover-shape shape-top-light"></div>
+      <div class="cover-shape shape-top-dark"></div>
+      <div class="cover-shape shape-bottom-light"></div>
+      <div class="cover-shape shape-bottom-dark"></div>
+      <div class="cover-shape shape-accent"></div>
+
+      <div class="cover-logo-badge">
+        <img src="img/logo-moe.png" alt="شعار وزارة التعليم ورؤية 2030" class="cover-logo">
+      </div>
+
+      <div class="cover-header-right">
+        <div class="cover-line dept-line">المملكة العربية السعودية</div>
+        <div class="cover-line ministry-line">وزارة التعليم</div>
+        <div class="cover-line school-line" id="cover-school-display">الابتدائية الثانية والستون بعد الثلاثمائة ٣٦٢</div>
+      </div>
+
+      <div class="cover-title-block">
+        <div class="cover-main-title">تقرير تحليل بطاقة اختبار نافس</div>
+        <div class="cover-grade-title" id="cover-grade-display">للصف السادس الابتدائي</div>
+      </div>
+
+      <div class="cover-footer-block">
+        <div class="cover-principal-title" id="cover-principal-display">مديرة المدرسة / مستورة العجمي</div>
+        <div class="cover-year-title" id="cover-year-display">١٤٤٦هـ</div>
+      </div>
+
+      <svg class="cover-art art-bottom" viewBox="0 0 320 160" aria-hidden="true">
+        <rect x="20" y="90" width="26" height="55" rx="3" fill="#f2b234"/>
+        <rect x="54" y="70" width="26" height="75" rx="3" fill="#39b54a"/>
+        <rect x="88" y="50" width="26" height="95" rx="3" fill="#e05252"/>
+        <rect x="122" y="35" width="26" height="110" rx="3" fill="#048680"/>
+        <rect x="170" y="30" width="120" height="8" rx="4" fill="#048680"/>
+        <rect x="170" y="48" width="90" height="8" rx="4" fill="#8fd3d0"/>
+        <rect x="170" y="66" width="105" height="8" rx="4" fill="#8fd3d0"/>
+        <polyline points="20,155 100,120 170,135 250,80 310,55" fill="none" stroke="#e05252" stroke-width="5" stroke-linecap="round"/>
+        <polygon points="310,55 288,52 302,72" fill="#e05252"/>
+      </svg>
+    </div>
+  </div>
+
   <header class="masthead">
     <div class="masthead-meta">المملكة العربية السعودية — وزارة التعليم</div>
     <h1>تقرير متابعة الاختبارات الوطنية نافس</h1>
