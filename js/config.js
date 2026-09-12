@@ -141,3 +141,97 @@ const REPORT_SECTIONS = Object.freeze([
     ]
   }
 ]);
+
+/* ============================================================
+   إدارة التخزين المحلي وحالة التطبيق (Storage Manager)
+   ============================================================ */
+
+const STORAGE_KEYS = Object.freeze({
+  REPORT_DATA: "nafas-report-1447",
+  ACTIVE_TAB:  "nafas-active-tab",
+  CARD_STATES: "nafas-card-states",
+  SCROLL_Y:    "nafas-scroll-y",
+});
+
+const StorageManager = Object.freeze({
+  get(key, defaultValue = null, storage = localStorage) {
+    try {
+      const item = storage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
+  },
+
+  set(key, value, storage = localStorage) {
+    try {
+      storage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
+  },
+
+  remove(key, storage = localStorage) {
+    try {
+      storage.removeItem(key);
+    } catch (e) {}
+  },
+
+  getReportData() {
+    return this.get(STORAGE_KEYS.REPORT_DATA, {});
+  },
+
+  saveReportData(data) {
+    this.set(STORAGE_KEYS.REPORT_DATA, data);
+  },
+
+  getActiveTab() {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.ACTIVE_TAB);
+    } catch (e) {
+      return null;
+    }
+  },
+
+  saveActiveTab(tabId) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_TAB, tabId);
+    } catch (e) {}
+  },
+
+  getCardStates() {
+    return this.get(STORAGE_KEYS.CARD_STATES, {});
+  },
+
+  isCardCollapsed(cardId, defaultCollapsed = true) {
+    const states = this.getCardStates();
+    return cardId in states ? !!states[cardId] : defaultCollapsed;
+  },
+
+  saveCardState(cardId, isCollapsed) {
+    const states = this.getCardStates();
+    states[cardId] = isCollapsed;
+    this.set(STORAGE_KEYS.CARD_STATES, states);
+  },
+
+  getScrollY() {
+    try {
+      const val = sessionStorage.getItem(STORAGE_KEYS.SCROLL_Y);
+      return val !== null ? parseFloat(val) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  saveScrollY(y) {
+    try {
+      sessionStorage.setItem(STORAGE_KEYS.SCROLL_Y, y.toString());
+    } catch (e) {}
+  },
+
+  clearAll() {
+    this.remove(STORAGE_KEYS.REPORT_DATA);
+    this.remove(STORAGE_KEYS.ACTIVE_TAB);
+    this.remove(STORAGE_KEYS.CARD_STATES);
+    this.remove(STORAGE_KEYS.SCROLL_Y, sessionStorage);
+  }
+});
+

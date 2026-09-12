@@ -51,10 +51,22 @@ const CALCULATIONS = {
   },
 
   // فرق إحصائي فرعي = قيمة أ − قيمة ب
-  diff(valA, valB) {
+  diff(valA, valB, targetLabel = null) {
     const a = readNumber(valA);
     const b = readNumber(valB);
-    if (a === null || b === null) return { text: PLACEHOLDER, direction: "none" };
+    if (a === null && b === null) {
+      return { text: PLACEHOLDER, direction: "none" };
+    }
+    if (a !== null && b === null) {
+      return {
+        text: targetLabel ? "⚠️ يلزم إدخال " + targetLabel : PLACEHOLDER,
+        direction: "missing-target",
+        placeholder: true
+      };
+    }
+    if (a === null && b !== null) {
+      return { text: PLACEHOLDER, direction: "none" };
+    }
     const d = a - b;
     if (d === 0) return { text: "0.0%", direction: "flat" };
     return {

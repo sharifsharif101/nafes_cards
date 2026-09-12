@@ -116,8 +116,11 @@ const SECTION_BUILDERS = {
     }
 
     section.subjects.forEach(s => {
-      // تبدأ البطاقة مغلقة (collapsed)
-      const card = el("div", "subject-card collapsed");
+      // قراءة حالة البطاقة عبر StorageManager
+      const isCollapsed = StorageManager.isCardCollapsed(s.id, true);
+
+      const card = el("div", "subject-card" + (isCollapsed ? " collapsed" : ""));
+      card.dataset.cardId = s.id;
 
       const header = el("div", "subject-header");
       const title = el("h3", "subject-title", s.label);
@@ -143,6 +146,7 @@ const SECTION_BUILDERS = {
 
       header.addEventListener("click", () => {
         card.classList.toggle("collapsed");
+        StorageManager.saveCardState(s.id, card.classList.contains("collapsed"));
       });
 
       wrap.append(card);

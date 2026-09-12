@@ -5,7 +5,6 @@
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "nafas-report-1447";
   const SAVE_HIDE_DELAY = 2000;
   let saveTimer = null;
   let isInitialized = false;
@@ -36,13 +35,16 @@
       });
     },
 
-    switchTab(tabId) {
+    switchTab(tabId, save = true) {
       document.querySelectorAll(".tab-btn").forEach(b => {
         b.classList.toggle("active", b.dataset.tab === tabId);
       });
       document.querySelectorAll(".tab-pane").forEach(p => {
         p.classList.toggle("active", p.dataset.tab === tabId);
       });
+      if (save) {
+        StorageManager.saveActiveTab(tabId);
+      }
     },
 
     buildReport() {
@@ -68,16 +70,26 @@
         card.append(builder(section));
         pane.append(card);
       });
-      this.switchTab(TABS[0].id);
     },
 
     // 2) ربط الأحداث والأزرار
     bindEvents() {
       const printBtn = document.getElementById("btn-print");
+      const exportPdfBtn = document.getElementById("btn-export-pdf");
       const clearBtn = document.getElementById("btn-clear");
       if (printBtn) printBtn.addEventListener("click", () => window.print());
+      if (exportPdfBtn) exportPdfBtn.addEventListener("click", () => this.exportPDF());
       if (clearBtn) clearBtn.addEventListener("click", () => this.clearAll());
       document.addEventListener("input", () => this.refresh(false));
+
+      // حفظ موضع التمرير تلقائياً عبر StorageManager
+      window.addEventListener("scroll", () => {
+        StorageManager.saveScrollY(window.scrollY);
+      }, { passive: true });
+
+      window.addEventListener("beforeunload", () => {
+        StorageManager.saveScrollY(window.scrollY);
+      });
     },
 
     // 3) جمع البيانات وحساب النتائج
@@ -174,42 +186,62 @@
         .filter(s => s.type === "subdomains-cards")
         .forEach(sec => {
           sec.subjectSubdomains.forEach(sub => {
-            const tab2Admin = values[sub.id + "-admin2025"];
-            const tab3Admin = values["sub-" + sub.id + "-admin2025"];
-            const adminVal = (tab3Admin !== undefined && tab3Admin !== "") ? tab3Admin : tab2Admin;
-
-            const tab2Kingdom = values[sub.id + "-kingdom2025"];
-            const tab3Kingdom = values["sub-" + sub.id + "-kingdom2025"];
-            const kingdomVal = (tab3Kingdom !== undefined && tab3Kingdom !== "") ? tab3Kingdom : tab2Kingdom;
-
-            // مزامنة تلقائية للقيم بين التبويب الثاني والتبويب الثالث
+            // مزامنة تلقائية ثنائية الاتجاه واختبار القيم الصريحة
             const inTab2Admin = document.getElementById(sub.id + "-admin2025");
             const inTab3Admin = document.getElementById("sub-" + sub.id + "-admin2025");
             if (inTab2Admin && inTab3Admin) {
-              if (document.activeElement === inTab3Admin && inTab2Admin.value !== inTab3Admin.value) {
-                inTab2Admin.value = inTab3Admin.value;
-              } else if (document.activeElement === inTab2Admin && inTab3Admin.value !== inTab2Admin.value) {
-                inTab3Admin.value = inTab2Admin.value;
+              if (inTab3Admin.value !== inTab2Admin.value) {
+                if (document.activeElement === inTab3Admin) {
+                  inTab2Admin.value = inTab3Admin.value;
+                } else if (document.activeElement === inTab2Admin) {
+                  inTab3Admin.value = inTab2Admin.value;
+                } else {
+                  if (inTab3Admin.value === "" && inTab2Admin.value !== "") {
+                    inTab3Admin.value = inTab2Admin.value;
+                  } else if (inTab2Admin.value === "" && inTab3Admin.value !== "") {
+                    inTab2Admin.value = inTab3Admin.value;
+                  }
+                }
               }
             }
 
             const inTab2Kingdom = document.getElementById(sub.id + "-kingdom2025");
             const inTab3Kingdom = document.getElementById("sub-" + sub.id + "-kingdom2025");
             if (inTab2Kingdom && inTab3Kingdom) {
-              if (document.activeElement === inTab3Kingdom && inTab2Kingdom.value !== inTab3Kingdom.value) {
-                inTab2Kingdom.value = inTab3Kingdom.value;
-              } else if (document.activeElement === inTab2Kingdom && inTab3Kingdom.value !== inTab2Kingdom.value) {
-                inTab3Kingdom.value = inTab2Kingdom.value;
+              if (inTab3Kingdom.value !== inTab2Kingdom.value) {
+                if (document.activeElement === inTab3Kingdom) {
+                  inTab2Kingdom.value = inTab3Kingdom.value;
+                } else if (document.activeElement === inTab2Kingdom) {
+                  inTab3Kingdom.value = inTab2Kingdom.value;
+                } else {
+                  if (inTab3Kingdom.value === "" && inTab2Kingdom.value !== "") {
+                    inTab3Kingdom.value = inTab2Kingdom.value;
+                  } else if (inTab2Kingdom.value === "" && inTab3Kingdom.value !== "") {
+                    inTab2Kingdom.value = inTab3Kingdom.value;
+                  }
+                }
               }
+            }
+
+            const adminVal = inTab3Admin ? inTab3Admin.value : (values["sub-" + sub.id + "-admin2025"] || "");
+            const kingdomVal = inTab3Kingdom ? inTab3Kingdom.value : (values["sub-" + sub.id + "-kingdom2025"] || "");
+
+            // تنبيه بصري على الخانات العلوية إذا تم إدخال نتائج بدون تحديد نسبة الإدارة أو المملكة
+            const hasAnyItem2025 = sub.items.some(item => (values[`sub-${sub.id}-${item.id}-y2025`] || "").trim() !== "");
+            if (inTab3Admin) {
+              inTab3Admin.classList.toggle("missing-required", hasAnyItem2025 && adminVal.trim() === "");
+            }
+            if (inTab3Kingdom) {
+              inTab3Kingdom.classList.toggle("missing-required", hasAnyItem2025 && kingdomVal.trim() === "");
             }
 
             sub.items.forEach(item => {
               const item2025 = values[`sub-${sub.id}-${item.id}-y2025`];
               const item2024 = values[`sub-${sub.id}-${item.id}-y2024`];
 
-              const diffChange = CALCULATIONS.diff(item2025, item2024);
-              const diffAdmin = CALCULATIONS.diff(item2025, adminVal);
-              const diffKingdom = CALCULATIONS.diff(item2025, kingdomVal);
+              const diffChange = CALCULATIONS.diff(item2025, item2024, "2024");
+              const diffAdmin = CALCULATIONS.diff(item2025, adminVal, "نسبة الإدارة");
+              const diffKingdom = CALCULATIONS.diff(item2025, kingdomVal, "نسبة المملكة");
 
               const changeNode = document.getElementById(`sub-${sub.id}-${item.id}-diff-change`);
               if (changeNode) {
@@ -234,9 +266,9 @@
     },
 
     updateProgress() {
-      const inputs = [...document.querySelectorAll("#report input[id]")];
-      const filled = inputs.filter(i => i.value.trim() !== "").length;
-      const pct = inputs.length ? Math.round((filled / inputs.length) * 100) : 0;
+      const fields = [...document.querySelectorAll("#report input[id], #report textarea[id]")];
+      const filled = fields.filter(i => i.value.trim() !== "").length;
+      const pct = fields.length ? Math.round((filled / fields.length) * 100) : 0;
 
       const fillNode = document.getElementById("progress-fill");
       const textNode = document.getElementById("progress-text");
@@ -245,16 +277,14 @@
         textNode.textContent =
           pct === 0 ? "لم تبدأ التعبئة بعد"
         : pct === 100 ? "اكتمل التقرير ✓"
-        : "أكملت " + filled + " من " + inputs.length + " خانة";
+        : "أكملت " + filled + " من " + fields.length + " خانة";
       }
     },
 
-    // 4) إدارة الحفظ في التخزين المحلي (LocalStorage)
+    // 4) إدارة الحفظ في التخزين المحلي عبر StorageManager
     save(values, silent) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
-        if (!silent) this.flashSaved();
-      } catch (e) { /* تجاهل خطأ التخزين في البيئات المقيدة */ }
+      StorageManager.saveReportData(values);
+      if (!silent) this.flashSaved();
     },
 
     flashSaved() {
@@ -266,19 +296,40 @@
     },
 
     restore() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-        Object.entries(saved).forEach(([id, value]) => {
-          const input = document.getElementById(id);
-          if (input) input.value = value;
+      // 1) استرجاع القيم المدخلة
+      const saved = StorageManager.getReportData();
+      Object.entries(saved).forEach(([id, value]) => {
+        const input = document.getElementById(id);
+        if (input) input.value = value;
+      });
+
+      // 2) استرجاع التبويب النشط
+      const savedTab = StorageManager.getActiveTab();
+      const tabExists = TABS.some(t => t.id === savedTab);
+      this.switchTab(tabExists ? savedTab : TABS[0].id, false);
+
+      // 3) استرجاع موضع التمرير في الصفحة (Scroll Position)
+      const savedY = StorageManager.getScrollY();
+      if (savedY !== null && !isNaN(savedY) && savedY > 0) {
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: savedY, behavior: "instant" });
         });
-      } catch (e) { /* بيانات تالفة */ }
+      }
+    },
+
+    exportPDF() {
+      // إظهار جميع البطاقات والأقسام والأجسام المطوية أثناء التصدير للـ PDF
+      document.querySelectorAll(".subject-card.collapsed").forEach(card => {
+        card.classList.remove("collapsed");
+      });
+      window.print();
     },
 
     clearAll() {
       if (!confirm("هل أنت متأكدة من مسح جميع البيانات؟ لا يمكن التراجع.")) return;
       document.querySelectorAll("#report input, #report textarea").forEach(i => { i.value = ""; });
-      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      StorageManager.clearAll();
+      this.switchTab(TABS[0].id, false);
       this.refresh(true);
     },
   };
