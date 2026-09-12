@@ -12,11 +12,20 @@ function el(tag, className, text) {
   return node;
 }
 
-// بطاقة رسم بياني: كانفس يديره ChartEngine + رسالة إرشادية عند غياب البيانات
+// بطاقة رسم بياني مطوية: زر يعرض الرسم في مودال كبير يديره ChartEngine
 function makeChartCard(section, spec, ctx) {
-  const card = el("div", "chart-card");
-  card.append(el("h3", "chart-title", spec.title));
-  if (spec.description) card.append(el("p", "chart-description", spec.description));
+  const card = el("div", "chart-card collapsed");
+  card.dataset.sectionId = section.id;
+
+  const header = el("div", "chart-card-header");
+  const headText = el("div", "chart-card-head-text");
+  headText.append(el("h3", "chart-title", spec.title));
+  if (spec.description) headText.append(el("p", "chart-description", spec.description));
+
+  const openBtn = el("button", "btn chart-open-btn no-print", "📊 عرض الرسم البياني");
+  openBtn.type = "button";
+  header.append(headText, openBtn);
+  card.append(header);
 
   const box = el("div", "chart-box");
   const rows = ctx && ctx.items ? ctx.items.length : 3;
@@ -27,10 +36,13 @@ function makeChartCard(section, spec, ctx) {
   canvas.dataset.chartType = spec.type;
   canvas.dataset.sectionId = section.id;
   if (ctx && ctx.id) canvas.dataset.subId = ctx.id;
+  canvas._homeBox = box; // الموضع الأساس الذي يعود إليه بعد إغلاق المودال
 
   const msg = el("div", "chart-empty-msg", spec.emptyText || "أدخلي البيانات لعرض الرسم البياني");
   box.append(canvas, msg);
   card.append(box);
+
+  openBtn.addEventListener("click", () => window.ChartEngine.openModal(card, spec));
   return card;
 }
 

@@ -168,6 +168,9 @@
       // للرسوم المخفية عرض حقيقي قبل الرسم، ثم نعيد الوضع بعدها.
       window.addEventListener("beforeprint", () => {
         this.printing = true;
+        this.closeModal(); // إعادة الكانفس لموضعه قبل الطباعة
+        // إظهار صناديق الرسوم المطوية في مسار الطباعة
+        document.querySelectorAll(".chart-card.collapsed").forEach(c => c.classList.add("print-force-open"));
         // إبراز كل التبويبات كي يكون للرسوم المخفية عرض حقيقي قبل الرسم
         document.querySelectorAll(".tab-pane").forEach(p => {
           p.classList.add("print-force-visible");
@@ -181,6 +184,7 @@
       });
       window.addEventListener("afterprint", () => {
         this.printing = false;
+        document.querySelectorAll(".print-force-open").forEach(c => c.classList.remove("print-force-open"));
         document.querySelectorAll(".print-force-visible").forEach(p => p.classList.remove("print-force-visible"));
         document.querySelectorAll(".tab-pane").forEach(p => { p.style.display = ""; });
         document.querySelectorAll("canvas[data-chart-type]").forEach(c => {
@@ -193,6 +197,68 @@
     // استدعاء متزامن: في التبويبات غير الظاهرة قد لا يُنفَّذ rAF أبداً
     onTabSwitch() { this.update(); },
     onCardToggle() { this.update(); },
+
+    /* ---------- المودال الكبير لعرض الرسوم ----------
+       البطاقة مطوية افتراضياً؛ الزر ينقل الكانفس إلى جسم المودال
+       لعرضه بحجم كبير، وعند الإغلاق يعود الكانفس إلى موضعه الأصلي. */
+    ensureModal() {
+      if (this.modal) return this.modal;
+      const overlay = el("div", "chart-modal-overlay");
+      const dialog = el("div", "chart-modal");
+      dialog.setAttribute("role", "dialog");
+      dialog.setAttribute("aria-modal", "true");
+
+      const header = el("div", "chart-modal-header");
+      const title = el("h3", "chart-modal-title");
+      const closeBtn = el("button", "chart-modal-close no-print", "✕ إغلاق");
+      closeBtn.type = "button";
+      header.append(title, closeBtn);
+
+      const desc = el("p", "chart-modal-desc");
+      const body = el("div", "chart-modal-body");
+      dialog.append(header, desc, body);
+      overlay.append(dialog);
+      document.body.append(overlay);
+
+      closeBtn.addEventListener("click", () => this.closeModal());
+      overlay.addEventListener("click", (e) => { if (e.target === overlay) this.closeModal(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && overlay.classList.contains("open")) this.closeModal();
+      });
+
+      this.modal = { overlay, title, desc, body };
+      return this.modal;
+    },
+
+    openModal(card, spec) {
+      const modal = this.ensureModal();
+      this.closeModal(); // إعادة أي كانفس مفتوح سابقاً إلى موضع أساسه
+      const canvas = card.querySelector("canvas[data-chart-type]");
+      if (!canvas) return;
+      modal.title.textContent = spec.title;
+      modal.desc.textContent = spec.description || "";
+      modal.desc.style.display = spec.description ? "" : "none";
+      // نقل الكانفس ورسالة نقص البيانات معاً إلى جسم المودال
+      modal.body.appendChild(canvas);
+      const msg = canvas._homeBox.querySelector(".chart-empty-msg");
+      if (msg) modal.body.appendChild(msg);
+      modal.overlay.classList.add("open");
+      // الرسم بحجم المودال الجديد (أو إنشاؤه أول مرة)
+      const existing = this.charts[canvas.id];
+      if (existing) requestAnimationFrame(() => existing.chart.resize());
+      this.update();
+    },
+
+    closeModal() {
+      if (!this.modal || !this.modal.overlay.classList.contains("open")) return;
+      const canvas = this.modal.body.querySelector("canvas[data-chart-type]");
+      if (canvas && canvas._homeBox) {
+        canvas._homeBox.appendChild(canvas);
+        const msg = this.modal.body.querySelector(".chart-empty-msg");
+        if (msg) canvas._homeBox.appendChild(msg);
+      }
+      this.modal.overlay.classList.remove("open");
+    },
 
     update(values) {
       if (!hasChartLib) return;

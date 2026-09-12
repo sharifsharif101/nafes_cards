@@ -417,15 +417,33 @@ textarea::placeholder {
 /* ---------- بطاقات الرسوم البيانية (ChartEngine) ---------- */
 .chart-card {
   background: var(--ui-card-bg); border: 1px solid var(--ui-border);
-  border-radius: var(--radius-card); padding: 20px;
+  border-radius: var(--radius-card); padding: 16px 20px;
   margin-top: 16px;
 }
+.chart-card .chart-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+}
+.chart-card .chart-card-head-text { flex: 1; min-width: 220px; }
 .chart-card .chart-title {
   margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; color: var(--text-main);
 }
 .chart-card .chart-description {
-  margin: 0 0 14px; font-size: .82rem; color: var(--text-muted, #6b7a8d); line-height: 1.6;
+  margin: 0; font-size: .82rem; color: var(--text-muted, #6b7a8d); line-height: 1.6;
 }
+.chart-card .chart-open-btn {
+  background: var(--primary); color: #fff; border: none;
+  border-radius: 10px; padding: 10px 18px;
+  font-family: inherit; font-size: .9rem; font-weight: 600;
+  cursor: pointer; transition: background .2s, transform .15s;
+  white-space: nowrap;
+}
+.chart-card .chart-open-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* صندوق الرسم مطوي داخل البطاقة — يظهر في المودال أو عند الطباعة */
+.chart-card.collapsed .chart-box { display: none; }
+.chart-card.print-force-open .chart-box { display: block !important; }
+
 .chart-box {
   position: relative; width: 100%;
 }
@@ -437,6 +455,46 @@ textarea::placeholder {
   color: var(--text-muted, #6b7a8d); font-size: .9rem; text-align: center;
   padding: 12px;
 }
+
+/* ---------- مودال عرض الرسوم البيانية ---------- */
+.chart-modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(23, 32, 42, 0.6); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; visibility: hidden; transition: opacity .25s ease;
+}
+.chart-modal-overlay.open { opacity: 1; }
+.chart-modal {
+  background: var(--ui-card-bg, #fff);
+  border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: min(92vw, 1050px); max-height: 90vh;
+  display: flex; flex-direction: column;
+  padding: 20px 24px;
+  transform: translateY(14px) scale(.98); transition: transform .25s ease;
+}
+.chart-modal-overlay.open .chart-modal { transform: translateY(0) scale(1); }
+.chart-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--ui-border); padding-bottom: 12px;
+}
+.chart-modal-title { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
+.chart-modal-close {
+  background: transparent; border: 1px solid var(--ui-border-dark);
+  border-radius: 10px; padding: 8px 16px; cursor: pointer;
+  font-family: inherit; font-size: .85rem; font-weight: 600;
+  color: var(--text-muted, #6b7a8d); transition: background .2s;
+}
+.chart-modal-close:hover { background: rgba(0, 0, 0, 0.05); }
+.chart-modal-desc {
+  margin: 10px 0 0; font-size: .85rem; color: var(--text-muted, #6b7a8d); line-height: 1.6;
+}
+.chart-modal-body {
+  position: relative; width: 100%;
+  height: min(62vh, 560px); margin-top: 14px;
+}
+.chart-modal-body canvas { display: block; }
 
 /* ---------- الملاحظات والتوصيات وفريق العمل ---------- */
 .rec-team-wrap {
@@ -887,12 +945,14 @@ textarea::placeholder {
   /* تبويبات أُبرزت قبل الطباعة كي تُرسم الرسوم المخفية بعرض حقيقي */
   .print-force-visible { display: block !important; }
 
-  /* بطاقات الرسوم لا تُقسم بين صفحتي الطباعة */
+  /* بطاقات الرسوم لا تُقسم بين صفحتي الطباعة وتُفتح بالكامل */
   .chart-card {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
     box-shadow: none !important;
   }
+  /* الرسوم المطوية تظهر كاملة في الطباعة/PDF دون زر الفتح */
+  .chart-card.collapsed .chart-box { display: block !important; }
 
   .card, .rec-box {
     box-shadow: none !important;
