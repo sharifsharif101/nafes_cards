@@ -299,6 +299,155 @@ body {
 .calc-val.down { color: #b91c1c; }
 .calc-val.none { color: #64748b; font-weight: 400; }
 
+/* ---------- المجالات الفرعية ---------- */
+.subdomains-wrap {
+  display: flex; flex-direction: column; gap: 20px;
+}
+.subdomain-card {
+  background: var(--ui-card-bg); border: 1px solid var(--ui-border);
+  border-radius: var(--radius-card); padding: 18px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+.subdomain-card-header {
+  display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px;
+  border-bottom: 2px solid var(--primary-bg-soft); padding-bottom: 12px;
+}
+.subdomain-title {
+  font-size: 1rem; color: var(--primary); font-weight: 700; margin: 0;
+}
+
+/* بطاقة معلومات المقارنة المطابقة للإكسل */
+.compare-info-card {
+  background: var(--ui-card-bg); border: 1px solid var(--ui-border-dark);
+  border-radius: var(--radius-card); overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04); width: 100%; max-width: 380px;
+}
+.compare-info-header {
+  background: #c55a11; color: #ffffff; font-weight: 700;
+  text-align: center; padding: 6px 12px; font-size: .9rem;
+}
+.compare-info-body {
+  display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ui-border);
+}
+.compare-info-field {
+  padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+}
+.compare-info-field.admin-field {
+  background: #d9d9d9; border-left: 1px solid #bfbfbf;
+}
+.compare-info-field.kingdom-field {
+  background: #5b9bd5; color: #fff;
+}
+.compare-info-field label {
+  font-weight: 700; font-size: .82rem; text-align: center; line-height: 1.35;
+}
+.compare-info-field.admin-field label { color: #262626; }
+.compare-info-field.kingdom-field label { color: #ffffff; }
+
+.compare-info-field input {
+  width: 85px; text-align: center; padding: 5px 8px; font-weight: 700;
+  border-radius: var(--radius-input); border: 1px solid #a6a6a6; font-size: .92rem;
+  background: #ffffff; color: #000000; font-family: inherit;
+}
+.compare-info-field input:focus {
+  border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(197, 90, 17, 0.25);
+}
+.subdomain-table {
+  width: 100%; border-collapse: collapse; text-align: center;
+  font-size: .92rem;
+}
+.subdomain-table th, .subdomain-table td {
+  padding: 10px 12px; border: 1px solid var(--ui-border);
+  vertical-align: middle;
+}
+.subdomain-table th {
+  background: var(--primary-bg-soft); color: var(--dark-amethyst-2);
+  font-weight: 600; font-size: .88rem;
+}
+.subdomain-table td.domain-name {
+  font-weight: 600; text-align: right; color: var(--text-main);
+  background: #fafafa; min-width: 160px;
+}
+.subdomain-table input {
+  width: 100%; max-width: 110px; padding: 6px 10px; text-align: center;
+  border: 1px solid var(--ui-border-dark); border-radius: var(--radius-input);
+  font-weight: 600; font-family: inherit; font-size: .9rem;
+  background: #fff; color: var(--text-main);
+}
+.subdomain-table input:focus {
+  border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.15);
+}
+
+/* ---------- الملاحظات والتوصيات وفريق العمل ---------- */
+.rec-team-wrap {
+  display: flex; flex-direction: column; gap: 24px;
+}
+.rec-box {
+  background: var(--ui-card-bg); border: 1px solid var(--ui-border);
+  border-radius: var(--radius-card); padding: 20px;
+}
+.rec-box-title {
+  font-size: 1.05rem; font-weight: 700; color: var(--primary);
+  margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;
+}
+.notes-inputs-grid {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.note-field label {
+  font-weight: 600; font-size: .9rem; margin-bottom: 6px; color: var(--text-main);
+}
+.note-field input {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--ui-border-dark);
+  border-radius: var(--radius-input); font-family: inherit; font-size: .92rem;
+}
+
+.recs-list {
+  list-style: none; padding-right: 0; display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 16px;
+}
+.rec-item {
+  background: #f8fafc; border: 1px solid var(--ui-border); padding: 8px 12px;
+  border-radius: 6px; font-weight: 500; font-size: .92rem; color: var(--text-main);
+  line-height: 1.5;
+}
+.extra-rec-field textarea {
+  width: 100%; padding: 10px; border: 1px solid var(--ui-border-dark);
+  border-radius: var(--radius-input); font-family: inherit; font-size: .92rem;
+  resize: vertical; margin-top: 6px;
+}
+
+.team-header {
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--ui-border); padding-bottom: 10px; margin-bottom: 16px;
+}
+.author-badge {
+  background: var(--primary-bg-soft); color: var(--primary); font-weight: 700;
+  font-size: .85rem; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--mauve);
+}
+.team-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;
+}
+.team-col {
+  border: 1px dashed var(--ui-border-dark); padding: 14px 10px;
+  border-radius: var(--radius-input); background: #fdfdfd;
+  display: flex; flex-direction: column; gap: 10px; justify-content: space-between;
+}
+.team-label {
+  font-weight: 700; font-size: .92rem; color: var(--dark-amethyst-2);
+}
+.team-col input {
+  width: 100%; padding: 6px 8px; text-align: center; font-size: .88rem;
+  border: 1px solid var(--ui-border); border-radius: 4px; font-family: inherit;
+}
+.sig-line {
+  font-size: .78rem; color: var(--text-muted); margin-top: 4px;
+}
+.stamp-box-placeholder {
+  height: 60px; border: 2px dashed #cbd5e1; border-radius: 50%; width: 60px;
+  margin: 0 auto; display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; color: #94a3b8; font-weight: 600; text-align: center;
+}
+
 /* ---------- ذيل الصفحة ---------- */
 .page-footer {
   text-align: center; color: var(--text-muted); font-size: .82rem; font-weight: 500;
@@ -306,10 +455,15 @@ body {
 }
 
 /* ---------- التجاوب ---------- */
+@media (max-width: 768px) {
+  .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .subdomain-table { display: block; overflow-x: auto; }
+}
 @media (max-width: 600px) {
   .basic-grid { grid-template-columns: 1fr 1fr; }
   .stats, .compare-grid { grid-template-columns: 1fr; }
   .levels-row, .percents-row, .calcs-row { grid-template-columns: 1fr 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 380px) {
   .basic-grid { grid-template-columns: 1fr; }
@@ -378,15 +532,23 @@ body {
 @media print {
   body { background: #fff !important; color: #000 !important; padding: 0; }
   .no-print, .progress-wrap { display: none !important; }
-  .card, .subject-card, .masthead {
+  .card, .subject-card, .subdomain-card, .rec-box, .masthead {
     background: #fff !important; color: #000 !important; border: 1px solid #777 !important;
-    box-shadow: none !important; break-inside: avoid;
+    box-shadow: none !important; break-inside: avoid; margin-bottom: 12px;
   }
-  .masthead h1, .masthead p, .masthead-meta, .subject-title, .card > h2, field label, .calc-label {
+  .tab-pane { display: block !important; opacity: 1 !important; visibility: visible !important; }
+  .masthead h1, .masthead p, .masthead-meta, .subject-title, .subdomain-title, .card > h2, field label, .calc-label {
     color: #000 !important; background: none !important;
   }
-  .field input, .compare-box input { background: #fff !important; color: #000 !important; border: 1px solid #777 !important; }
+  .field input, .compare-box input, .subdomain-table input, .team-col input, textarea {
+    background: #fff !important; color: #000 !important; border: 1px solid #777 !important;
+  }
+  .subdomain-table th { background: #eee !important; color: #000 !important; border: 1px solid #777 !important; }
+  .subdomain-table td { border: 1px solid #777 !important; }
   .subject-card.collapsed .subject-body { display: block !important; }
   .subject-card.collapsed .subject-header { border-bottom: 1px solid #777 !important; background: #eee !important; }
   .toggle-icon { display: none !important; }
+  .team-grid { grid-template-columns: repeat(4, 1fr) !important; }
+  .stamp-box-placeholder { border-color: #000 !important; color: #000 !important; }
 }
+

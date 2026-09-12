@@ -11,8 +11,10 @@
    ============================================================ */
 
 const TABS = Object.freeze([
-  { id: "basic",        label: "البيانات الأساسية" },
-  { id: "distribution", label: "توزيع مستويات الأداء" },
+  { id: "basic",           label: "البيانات الأساسية" },
+  { id: "distribution",    label: "توزيع مستويات الأداء" },
+  { id: "subdomains",      label: "المجالات الفرعية" },
+  { id: "recommendations", label: "الملاحظات والتوصيات" },
 ]);
 
 const REPORT_SECTIONS = Object.freeze([
@@ -33,7 +35,7 @@ const REPORT_SECTIONS = Object.freeze([
   {
     id: "results",
     tab: "basic",
-    title: "النتائج",
+    title: "النتائج العامة",
     type: "stats",
     validation: "tested-vs-total",
     stats: [
@@ -57,7 +59,7 @@ const REPORT_SECTIONS = Object.freeze([
   {
     id: "levels",
     tab: "distribution",
-    title: "توزيع نسب أداء الطالبات على مستويات الأداء",
+    title: "توزيع نسب أداء الطالبات على مستويات الأداء في المواد الرئيسية",
     type: "subject-cards",
     subjects: [
       { id: "math", label: "رياضيات" },
@@ -84,4 +86,58 @@ const REPORT_SECTIONS = Object.freeze([
       { id: "diff-target",  label: "مقارنة بالمستهدف", tooltip: "الفرق بين نتيجة المدرسة والهدف المستهدف لعام 2025 (يحسب تلقائياً)" },
     ],
   },
+
+  /* ---------- التبويب الثالث: المجالات الفرعية ---------- */
+  {
+    id: "subdomains-section",
+    tab: "subdomains",
+    title: "نسبة الطالبات اللاتي اجتزن مستوى الحد الأدنى للإتقان في المجالات الفرعية",
+    type: "subdomains-cards",
+    subjectSubdomains: [
+      {
+        id: "math",
+        label: "مجال: الرياضيات",
+        items: [
+          { id: "numbers",  label: "الأعداد والعمليات" },
+          { id: "geometry", label: "الهندسة والقياس" },
+          { id: "data",     label: "البيانات والاحتمالات" },
+          { id: "algebra",  label: "الجبر" },
+        ]
+      },
+      {
+        id: "sci",
+        label: "مجال: العلوم",
+        items: [
+          { id: "earth",    label: "علم الأرض والفلك" },
+          { id: "physical", label: "العلوم الفيزيائية" },
+          { id: "life",     label: "علوم الحياة" },
+        ]
+      },
+      {
+        id: "read",
+        label: "مجال: القراءة",
+        items: [
+          { id: "comprehension", label: "استيعاب المقروء" },
+          { id: "vocabulary",    label: "دلالات الألفاظ" },
+        ]
+      }
+    ]
+  },
+
+  /* ---------- التبويب الرابع: الملاحظات والتوصيات وفريق العمل ---------- */
+  {
+    id: "recommendations-section",
+    tab: "recommendations",
+    title: "الملاحظات والتوصيات وفريق التحسين والتطوير",
+    type: "recommendations-team",
+    defaultRecommendations: [
+      "1. تحليل البيانات: استخدام نتائج الاختبارات السابقة لتحديد نقاط الضعف.",
+      "2. تطوير المعلمين: توفير تدريبات للمعلمين لتحسين طرق التدريس.",
+      "3. خطط مخصصة: تصميم خطط تعليمية تستهدف تحسين نقاط الضعف.",
+      "4. إشراك أولياء الأمور: المحافظة على تواصل مستمر مع أولياء الأمور لدعم الطلاب.",
+      "5. تحفيز الطلاب: تنظيم أنشطة تحفيزية ومسابقات تعليمية.",
+      "6. تقييم مستمر: استخدام اختبارات دورية لمتابعة تقدم الطلاب.",
+      "7. بيئة إيجابية: تعزيز بيئة تعليمية مشجعة وداعمة."
+    ]
+  }
 ]);
