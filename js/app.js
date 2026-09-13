@@ -259,68 +259,13 @@
         .filter(s => s.type === "subdomains-cards")
         .forEach(sec => {
           sec.subjectSubdomains.forEach(sub => {
-            // مزامنة تلقائية ثنائية الاتجاه واختبار القيم الصريحة
-            const inTab2Admin = document.getElementById(sub.id + "-admin2026");
-            const inTab3Admin = document.getElementById("sub-" + sub.id + "-admin2026");
-            if (inTab2Admin && inTab3Admin) {
-              if (inTab3Admin.value !== inTab2Admin.value) {
-                if (document.activeElement === inTab3Admin) {
-                  inTab2Admin.value = inTab3Admin.value;
-                } else if (document.activeElement === inTab2Admin) {
-                  inTab3Admin.value = inTab2Admin.value;
-                } else {
-                  if (inTab3Admin.value === "" && inTab2Admin.value !== "") {
-                    inTab3Admin.value = inTab2Admin.value;
-                  } else if (inTab2Admin.value === "" && inTab3Admin.value !== "") {
-                    inTab2Admin.value = inTab3Admin.value;
-                  }
-                }
-              }
-            }
-
-            const inTab2Kingdom = document.getElementById(sub.id + "-kingdom2026");
-            const inTab3Kingdom = document.getElementById("sub-" + sub.id + "-kingdom2026");
-            if (inTab2Kingdom && inTab3Kingdom) {
-              if (inTab3Kingdom.value !== inTab2Kingdom.value) {
-                if (document.activeElement === inTab3Kingdom) {
-                  inTab2Kingdom.value = inTab3Kingdom.value;
-                } else if (document.activeElement === inTab2Kingdom) {
-                  inTab3Kingdom.value = inTab2Kingdom.value;
-                } else {
-                  if (inTab3Kingdom.value === "" && inTab2Kingdom.value !== "") {
-                    inTab3Kingdom.value = inTab2Kingdom.value;
-                  } else if (inTab2Kingdom.value === "" && inTab3Kingdom.value !== "") {
-                    inTab2Kingdom.value = inTab3Kingdom.value;
-                  }
-                }
-              }
-            }
-
-            const adminVal = inTab3Admin ? inTab3Admin.value : (values["sub-" + sub.id + "-admin2026"] || "");
-            const kingdomVal = inTab3Kingdom ? inTab3Kingdom.value : (values["sub-" + sub.id + "-kingdom2026"] || "");
-
-            // تنبيه بصري على الخانات العلوية إذا تم إدخال نتائج بدون تحديد نسبة الإدارة أو المملكة
-            const hasAnyItem2026 = sub.items.some(item => (values[`sub-${sub.id}-${item.id}-y2026`] || "").trim() !== "");
-            if (inTab3Admin) {
-              inTab3Admin.classList.toggle("missing-required", hasAnyItem2026 && adminVal.trim() === "");
-            }
-            if (inTab3Kingdom) {
-              inTab3Kingdom.classList.toggle("missing-required", hasAnyItem2026 && kingdomVal.trim() === "");
-            }
-
             sub.items.forEach(item => {
-              const item2026 = values[`sub-${sub.id}-${item.id}-y2026`];
-              const item2025 = values[`sub-${sub.id}-${item.id}-y2025`];
+              const itemSchool = values[`sub-${sub.id}-${item.id}-y2026`];
+              const itemAdmin = values[`sub-${sub.id}-${item.id}-admin`];
+              const itemKingdom = values[`sub-${sub.id}-${item.id}-kingdom`];
 
-              const diffChange = CALCULATIONS.diff(item2026, item2025, "2025");
-              const diffAdmin = CALCULATIONS.diff(item2026, adminVal, "نسبة الإدارة");
-              const diffKingdom = CALCULATIONS.diff(item2026, kingdomVal, "نسبة المملكة");
-
-              const changeNode = document.getElementById(`sub-${sub.id}-${item.id}-diff-change`);
-              if (changeNode) {
-                changeNode.textContent = diffChange.text;
-                changeNode.className = "calc-val " + (diffChange.direction || "none");
-              }
+              const diffAdmin = CALCULATIONS.diff(itemSchool, itemAdmin, "نسبة الإدارة");
+              const diffKingdom = CALCULATIONS.diff(itemSchool, itemKingdom, "نسبة المملكة");
 
               const adminNode = document.getElementById(`sub-${sub.id}-${item.id}-diff-admin`);
               if (adminNode) {

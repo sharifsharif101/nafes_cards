@@ -143,9 +143,16 @@
             const horizontal = chart.options.indexAxis === "y";
             ctx.fillStyle = "#000000";
             if (horizontal) {
-              ctx.textAlign = "left";
-              ctx.textBaseline = "middle";
-              ctx.fillText(txt, bar.x + 5, bar.y);
+              const isReverse = chart.options.scales.x && chart.options.scales.x.reverse;
+              if (isReverse) {
+                ctx.textAlign = "right";
+                ctx.textBaseline = "middle";
+                ctx.fillText(txt, bar.x - 5, bar.y);
+              } else {
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+                ctx.fillText(txt, bar.x + 5, bar.y);
+              }
             } else {
               ctx.textAlign = "center";
               ctx.textBaseline = "bottom";
@@ -380,7 +387,7 @@
           options: Object.assign(common, {
             indexAxis: "y",
             scales: {
-              x: axisPercent({ grid: { color: "rgba(51,71,91,0.08)" } }),
+              x: axisPercent({ grid: { color: "rgba(51,71,91,0.08)" }, reverse: true }),
               y: { position: "right", ticks: { font: { size: 13 } }, grid: { display: false } },
             },
           }),

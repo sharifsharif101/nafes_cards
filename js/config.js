@@ -121,8 +121,8 @@ const REPORT_SECTIONS = Object.freeze([
         label: "مجال: الرياضيات",
         items: [
           { id: "numbers",  label: "الأعداد والعمليات" },
-          { id: "geometry", label: "الهندسة والقياس" },
           { id: "data",     label: "البيانات والاحتمالات" },
+          { id: "geometry", label: "الهندسة والقياس" },
           { id: "algebra",  label: "الجبر" },
         ]
       },
@@ -131,16 +131,16 @@ const REPORT_SECTIONS = Object.freeze([
         label: "مجال: العلوم",
         items: [
           { id: "earth",    label: "علم الأرض والفلك" },
-          { id: "physical", label: "العلوم الفيزيائية" },
           { id: "life",     label: "علوم الحياة" },
+          { id: "physical", label: "العلوم الفيزيائية والكيميائية" },
         ]
       },
       {
         id: "read",
         label: "مجال: القراءة",
         items: [
-          { id: "comprehension", label: "استيعاب المقروء" },
           { id: "vocabulary",    label: "دلالات الألفاظ" },
+          { id: "comprehension", label: "استيعاب المقروء" },
         ]
       }
     ],

@@ -203,35 +203,19 @@ const SECTION_BUILDERS = {
       const cardHeader = el("div", "subdomain-card-header");
       const title = el("h3", "subdomain-title", "نسبة الطلاب الذين اجتازوا مستوى الحد الأدنى للإتقان في المجالات الفرعية لمجال: " + sub.label.replace("مجال: ", ""));
       cardHeader.append(title);
-
-      // كتلة "معلومات المقارنة" (اكتب نسبة الإدارة عام 2026 - اكتب نسبة المملكة عام 2026)
-      const infoBox = el("div", "compare-info-card");
-      infoBox.innerHTML = `
-        <div class="compare-info-header">معلومات المقارنة (عام 2026)</div>
-        <div class="compare-info-body">
-          <div class="compare-info-field admin-field">
-            <label for="sub-${sub.id}-admin2026">اكتب نسبة الإدارة عام 2026</label>
-            <input type="number" id="sub-${sub.id}-admin2026" min="0" max="100" step="0.1" placeholder="مثال: 75">
-          </div>
-          <div class="compare-info-field kingdom-field">
-            <label for="sub-${sub.id}-kingdom2026">اكتب نسبة المملكة عام 2026</label>
-            <input type="number" id="sub-${sub.id}-kingdom2026" min="0" max="100" step="0.1" placeholder="مثال: 70">
-          </div>
-        </div>
-      `;
-      cardHeader.append(infoBox);
       card.append(cardHeader);
 
       const table = el("table", "subdomain-table");
       const thead = document.createElement("thead");
       thead.innerHTML = `
         <tr>
-          <th>المجال الفرعي</th>
-          <th>نسبة المجتازين 2026</th>
-          <th>نسبة المجتازين 2025</th>
-          <th>مقدار التغير عن 2025</th>
-          <th>مقارنة بمتوسط الإدارة</th>
-          <th>مقارنة بمتوسط المملكة</th>
+          <th class="domain-name">المجال الفرعي</th>
+          <th class="col-school">نسبة اجتياز المدرسة</th>
+          <th class="col-admin">نسبة اجتياز الإدارة</th>
+          <th class="col-kingdom">نسبة اجتياز المملكة</th>
+          <th class="col-spacer"></th>
+          <th class="col-diff-admin">مقارنة المدرسة بـ إدارة التعليم</th>
+          <th class="col-diff-kingdom">مقارنة المدرسة بـ المملكة</th>
         </tr>
       `;
       table.append(thead);
@@ -243,43 +227,49 @@ const SECTION_BUILDERS = {
 
         const tdLabel = el("td", "domain-name", item.label);
 
-        // نسبة 2026 (إدخال)
-        const td2026 = document.createElement("td");
-        const in2026 = document.createElement("input");
-        in2026.type = "number";
-        in2026.id = `sub-${sub.id}-${item.id}-y2026`;
-        in2026.min = "0"; in2026.max = "100"; in2026.step = "0.1";
-        in2026.placeholder = "0.0%";
-        td2026.append(in2026);
+        // 1) نسبة المدرسة (إدخال)
+        const tdSchool = el("td", "col-school");
+        const inSchool = document.createElement("input");
+        inSchool.type = "number";
+        inSchool.id = `sub-${sub.id}-${item.id}-y2026`;
+        inSchool.min = "0"; inSchool.max = "100"; inSchool.step = "0.1";
+        inSchool.placeholder = "0.0%";
+        tdSchool.append(inSchool);
 
-        // نسبة 2025 (إدخال إن توفرت)
-        const td2025 = document.createElement("td");
-        const in2025 = document.createElement("input");
-        in2025.type = "number";
-        in2025.id = `sub-${sub.id}-${item.id}-y2025`;
-        in2025.min = "0"; in2025.max = "100"; in2025.step = "0.1";
-        in2025.placeholder = "غير متوفرة";
-        td2025.append(in2025);
+        // 2) نسبة إدارة التعليم (إدخال مباشر)
+        const tdAdmin = el("td", "col-admin");
+        const inAdmin = document.createElement("input");
+        inAdmin.type = "number";
+        inAdmin.id = `sub-${sub.id}-${item.id}-admin`;
+        inAdmin.min = "0"; inAdmin.max = "100"; inAdmin.step = "0.1";
+        inAdmin.placeholder = "0.0%";
+        tdAdmin.append(inAdmin);
 
-        // مقدار التغير عن 2025 (محسوب تلقائياً)
-        const tdChange = document.createElement("td");
-        const valChange = el("span", "calc-val placeholder", "—");
-        valChange.id = `sub-${sub.id}-${item.id}-diff-change`;
-        tdChange.append(valChange);
+        // 3) نسبة المملكة (إدخال مباشر)
+        const tdKingdom = el("td", "col-kingdom");
+        const inKingdom = document.createElement("input");
+        inKingdom.type = "number";
+        inKingdom.id = `sub-${sub.id}-${item.id}-kingdom`;
+        inKingdom.min = "0"; inKingdom.max = "100"; inKingdom.step = "0.1";
+        inKingdom.placeholder = "0.0%";
+        tdKingdom.append(inKingdom);
 
-        // مقارنة بمتوسط الإدارة (محسوب تلقائياً)
-        const tdAdmin = document.createElement("td");
-        const valAdmin = el("span", "calc-val placeholder", "—");
-        valAdmin.id = `sub-${sub.id}-${item.id}-diff-admin`;
-        tdAdmin.append(valAdmin);
+        // عمود فاصل فارغ ومستقل تماماً
+        const tdSpacer = el("td", "col-spacer");
 
-        // مقارنة بمتوسط المملكة (محسوب تلقائياً)
-        const tdKingdom = document.createElement("td");
-        const valKingdom = el("span", "calc-val placeholder", "—");
-        valKingdom.id = `sub-${sub.id}-${item.id}-diff-kingdom`;
-        tdKingdom.append(valKingdom);
+        // 4) مقارنة المدرسة بـ إدارة التعليم (محسوب تلقائياً)
+        const tdDiffAdmin = el("td", "col-diff-admin");
+        const valDiffAdmin = el("span", "calc-val placeholder", "—");
+        valDiffAdmin.id = `sub-${sub.id}-${item.id}-diff-admin`;
+        tdDiffAdmin.append(valDiffAdmin);
 
-        tr.append(tdLabel, td2026, td2025, tdChange, tdAdmin, tdKingdom);
+        // 5) مقارنة المدرسة بـ المملكة (محسوب تلقائياً)
+        const tdDiffKingdom = el("td", "col-diff-kingdom");
+        const valDiffKingdom = el("span", "calc-val placeholder", "—");
+        valDiffKingdom.id = `sub-${sub.id}-${item.id}-diff-kingdom`;
+        tdDiffKingdom.append(valDiffKingdom);
+
+        tr.append(tdLabel, tdSchool, tdAdmin, tdKingdom, tdSpacer, tdDiffAdmin, tdDiffKingdom);
         tbody.append(tr);
       });
 

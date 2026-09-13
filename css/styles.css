@@ -529,6 +529,167 @@ textarea::placeholder {
   border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.15);
 }
 
+/* ألوان أعمدة جدول المجالات الفرعية متوافقة مع ألوان الرسم البياني */
+.subdomain-table th.col-school {
+  background: #e3f2fd;
+  color: #0277bd;
+  border-bottom: 3px solid #38b6ff;
+  font-weight: 700;
+}
+.subdomain-table td.col-school {
+  background: rgba(56, 182, 255, 0.06);
+}
+.subdomain-table td.col-school input {
+  border-color: #38b6ff;
+  color: #0277bd;
+}
+
+.subdomain-table th.col-admin {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  border-bottom: 3px solid #8e24aa;
+  font-weight: 700;
+}
+.subdomain-table td.col-admin {
+  background: rgba(142, 36, 170, 0.05);
+}
+
+.subdomain-table th.col-kingdom {
+  background: #eceff1;
+  color: #37474f;
+  border-bottom: 3px solid #546e7a;
+  font-weight: 700;
+}
+.subdomain-table td.col-kingdom {
+  background: rgba(84, 110, 122, 0.05);
+}
+.subdomain-table td.col-kingdom input {
+  border-color: #546e7a;
+  color: #37474f;
+}
+.subdomain-table td.col-kingdom input:focus {
+  border-color: #546e7a;
+  box-shadow: 0 0 0 3px rgba(84, 110, 122, 0.18);
+}
+.subdomain-table td.col-admin input {
+  border-color: #8e24aa;
+  color: #6a1b9a;
+}
+.subdomain-table td.col-admin input:focus {
+  border-color: #8e24aa;
+  box-shadow: 0 0 0 3px rgba(142, 36, 170, 0.18);
+}
+
+/* عمود فاصل شفاف ومستقل تماماً بين القسمين */
+.subdomain-table th.col-spacer,
+.subdomain-table td.col-spacer {
+  width: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  background: var(--ui-bg) !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+/* التنسيق المميز لعمودي المقارنة الآخرين بألوان مستقلة */
+.subdomain-table th.col-diff-admin {
+  background: linear-gradient(180deg, #f5f3ff, #ede9fe);
+  color: #6b21a8;
+  border-top: 3px solid #8b5cf6;
+  border-bottom: 3px solid #8b5cf6;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.subdomain-table td.col-diff-admin {
+  background: #faf5ff;
+  font-weight: 700;
+  color: #6b21a8;
+}
+
+.subdomain-table th.col-diff-kingdom {
+  background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
+  color: #0f172a;
+  border-top: 3px solid #334155;
+  border-bottom: 3px solid #334155;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.subdomain-table td.col-diff-kingdom {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* تنسيقات شارات الأرقام داخل الجدول (Pill Badges) */
+.subdomain-table .calc-val {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: -0.2px;
+  transition: all 0.2s ease-in-out;
+}
+
+.subdomain-table .calc-val.up {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  box-shadow: 0 2px 5px rgba(4, 120, 87, 0.1);
+}
+
+.subdomain-table .calc-val.down {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  box-shadow: 0 2px 5px rgba(220, 38, 38, 0.1);
+}
+
+.subdomain-table .calc-val.flat {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.subdomain-table .calc-val.none,
+.subdomain-table .calc-val.placeholder {
+  background: transparent;
+  color: #94a3b8;
+  font-weight: 600;
+  border: none;
+  box-shadow: none;
+}
+
+.subdomain-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+.subdomain-table tbody tr:hover td:not(.col-spacer) {
+  filter: brightness(0.98);
+}
+
+.subdomain-table .col-val-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.subdomain-table .col-val-badge.admin-badge {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  border: 1px solid rgba(142, 36, 170, 0.3);
+}
+.subdomain-table .col-val-badge.kingdom-badge {
+  background: #eceff1;
+  color: #37474f;
+  border: 1px solid rgba(84, 110, 122, 0.3);
+}
+
 /* ---------- بطاقات الرسوم البيانية (ChartEngine) ---------- */
 .chart-card {
   background: var(--ui-card-bg); border: 1px solid var(--ui-border);
@@ -1187,7 +1348,7 @@ textarea::placeholder {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important; /* ضمان عدم خروج أي محتوى أو جدول من الإطار */
+    overflow: visible !important;
   }
 
   .card > h2 {
@@ -1358,10 +1519,10 @@ textarea::placeholder {
      4) المجالات الفرعية والجداول المحكمة داخل الإطار 100%
      ============================================================ */
   .subdomain-card {
-    page-break-inside: auto !important;
-    break-inside: auto !important;
-    page-break-before: always !important;
-    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-before: auto !important;
+    break-before: auto !important;
     margin-bottom: 14px !important;
     padding: 10px 12px !important;
   }
@@ -1412,7 +1573,7 @@ textarea::placeholder {
     border: 1px solid #a6a6a6 !important;
   }
 
-  /* جدول المجالات الفرعية: عرض ثابت ومحكم بدون أي فيض أو خروج */
+  /* جدول المجالات الفرعية: عرض محكم ومطابق للمحاذاة 100% */
   .subdomain-table {
     width: 100% !important;
     max-width: 100% !important;
@@ -1434,21 +1595,16 @@ textarea::placeholder {
     color: #0f172a !important;
     font-weight: 700 !important;
   }
-  .subdomain-table th:nth-child(1) { width: 30% !important; }
-  .subdomain-table th:nth-child(2) { width: 14% !important; }
-  .subdomain-table th:nth-child(3) { width: 14% !important; }
-  .subdomain-table th:nth-child(4) { width: 14% !important; }
-  .subdomain-table th:nth-child(5) { width: 14% !important; }
-  .subdomain-table th:nth-child(6) { width: 14% !important; }
 
-  .subdomain-table td.domain-name {
-    min-width: 0 !important;
-    width: 30% !important;
-    font-size: 7.8pt !important;
-    padding-right: 6px !important;
-    text-align: right !important;
-    background: #fdfdfd !important;
-  }
+  /* محاذاة عروض الأعمدة باستخدام الفئات لضمان تطابق الترويسة والبيانات */
+  .subdomain-table .domain-name      { width: 25% !important; min-width: 0 !important; text-align: right !important; background: #fdfdfd !important; padding-right: 6px !important; }
+  .subdomain-table .col-school       { width: 12% !important; }
+  .subdomain-table .col-admin        { width: 12% !important; }
+  .subdomain-table .col-kingdom      { width: 12% !important; }
+  .subdomain-table .col-spacer       { width: 2%  !important; min-width: 6px !important; max-width: 10px !important; border: none !important; background: transparent !important; padding: 0 !important; }
+  .subdomain-table .col-diff-admin   { width: 18.5% !important; }
+  .subdomain-table .col-diff-kingdom { width: 18.5% !important; }
+
   .subdomain-table input {
     width: 100% !important;
     max-width: 100% !important;
@@ -1478,7 +1634,7 @@ textarea::placeholder {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     margin-top: 10px !important;
     padding: 8px 12px !important;
     border: 1px solid #e2e8f0 !important;
@@ -1498,15 +1654,16 @@ textarea::placeholder {
   .chart-box {
     width: 100% !important;
     max-width: 100% !important;
-    height: auto !important;
+    height: 220px !important;
+    min-height: 200px !important;
     display: block !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
+    position: relative !important;
   }
   .chart-box canvas {
     width: 100% !important;
     max-width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     display: block !important;
     box-sizing: border-box !important;
   }
