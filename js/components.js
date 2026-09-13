@@ -297,38 +297,13 @@ const SECTION_BUILDERS = {
   "recommendations-team"(section) {
     const wrap = el("div", "rec-team-wrap");
 
-    // 1) الملاحظات
+    // 1) الترتيب التلقائي للمواد بناءً على الإنجاز
     const notesBox = el("div", "rec-box notes-box");
-    notesBox.append(el("h3", "rec-box-title", "الملاحظات والتوصيات:"));
+    notesBox.append(el("h3", "rec-box-title", "ترتيب المواد حسب نسبة المجتازين لعام 2026 (من الأعلى إلى الأدنى):"));
 
-    const notesList = el("div", "notes-inputs-grid");
-    
-    const note1Wrap = el("div", "field note-field");
-    note1Wrap.append(el("label", null, "1- مقدار التغير في نسبة الطلبة المتقنين لمهارات الحد الأدنى للإتقان مقارنة بالعام الماضي:"));
-    const inNote1 = document.createElement("input");
-    inNote1.type = "text";
-    inNote1.id = "note-change-summary";
-    inNote1.placeholder = "اكتب مقدار التغير أو التحليل العام...";
-    note1Wrap.append(inNote1);
-
-    const note2Wrap = el("div", "field note-field");
-    note2Wrap.append(el("label", null, "2- ملاحظات مجال العلوم:"));
-    const inNote2 = document.createElement("input");
-    inNote2.type = "text";
-    inNote2.id = "note-sci-summary";
-    inNote2.placeholder = "مثال: وجود انخفاض في مجال (علوم الحياة) في مادة العلوم...";
-    note2Wrap.append(inNote2);
-
-    const note3Wrap = el("div", "field note-field");
-    note3Wrap.append(el("label", null, "3- ملاحظات مجال القراءة والرياضيات:"));
-    const inNote3 = document.createElement("input");
-    inNote3.type = "text";
-    inNote3.id = "note-read-summary";
-    inNote3.placeholder = "مثال: وجود انخفاض طفيف في مجال (دلالات الألفاظ) في مادة القراءة...";
-    note3Wrap.append(inNote3);
-
-    notesList.append(note1Wrap, note2Wrap, note3Wrap);
-    notesBox.append(notesList);
+    const rankBox = el("div", "auto-rank-box");
+    rankBox.id = "auto-rank-box";
+    notesBox.append(rankBox);
 
     // 2) التوصيات
     const recsBox = el("div", "rec-box recs-box");

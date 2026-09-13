@@ -121,6 +121,7 @@
       this.updateCompare(values);
       this.updateSubjectCalcs(values);
       this.updateSubdomainCalcs(values);
+      this.updateAutoRanking(values);
       this.updateProgress();
       // تحديث الرسوم البيانية بنفس البيانات المحصّلة
       if (window.ChartEngine) ChartEngine.update(values);
@@ -337,6 +338,83 @@
             });
           });
         });
+    },
+
+    updateAutoRanking(values) {
+      const box = document.getElementById("auto-rank-box");
+      if (!box) return;
+
+      const items = [
+        { id: "math", name: "مادة الرياضيات", val: parseFloat(values["math-y2026"]) },
+        { id: "sci",  name: "مادة العلوم",     val: parseFloat(values["sci-y2026"]) },
+        { id: "read", name: "مادة القراءة",    val: parseFloat(values["read-y2026"]) },
+      ];
+
+      const validItems = items.filter(i => !isNaN(i.val));
+
+      if (validItems.length === 0) {
+        box.innerHTML = `<div class="rank-empty-msg">أدخل نسبة المجتازين لعام 2026 في بطاقات المواد أعلاه لعرض الترتيب التلقائي للمواد من الأعلى إلى الأدنى.</div>`;
+        return;
+      }
+
+      // فرز المواد من الأعلى نسبة إلى الأدنى
+      validItems.sort((a, b) => b.val - a.val);
+
+      // حساب المراكز مع مراعاة حالة التساوي والتعادل (Ties)
+      let currentRank = 1;
+      const computedItems = validItems.map((item, index, arr) => {
+        if (index > 0 && item.val === arr[index - 1].val) {
+          return { ...item, rankNum: arr[index - 1].rankNum, isTie: true };
+        }
+        return { ...item, rankNum: index + 1, isTie: false };
+      });
+
+      const finalItems = computedItems.map(item => {
+        const tieCount = computedItems.filter(x => x.val === item.val).length;
+        return { ...item, hasTie: tieCount > 1 };
+      });
+
+      const allEqual = finalItems.length === 3 && finalItems.every(x => x.val === finalItems[0].val);
+
+      let html = `<div class="auto-rank-grid">`;
+      finalItems.forEach((item, idx) => {
+        let badgeText = "";
+        let subText = "";
+        let colorClass = `rank-${item.rankNum}`;
+
+        if (allEqual) {
+          badgeText = "مركز متساوي";
+          subText = "جميع المواد بنفس النسبة";
+          colorClass = "rank-tie";
+        } else if (item.rankNum === 1) {
+          badgeText = item.hasTie ? "المركز الأول (مكرر)" : "المركز الأول";
+          subText = "أعلى نسبة اجتياز";
+          colorClass = "rank-1";
+        } else if (item.rankNum === 2) {
+          badgeText = item.hasTie ? "المركز الثاني (مكرر)" : "المركز الثاني";
+          subText = "أداء متوسط";
+          colorClass = "rank-2";
+        } else if (item.rankNum === 3) {
+          badgeText = item.hasTie ? "المركز الثالث (مكرر)" : "المركز الثالث";
+          subText = "أدنى نسبة اجتياز";
+          colorClass = "rank-3";
+        }
+
+        html += `
+          <div class="auto-rank-card ${colorClass}">
+            <div class="auto-rank-header">
+              <span class="auto-rank-badge">${badgeText}</span>
+              <span class="auto-rank-sub">${subText}</span>
+            </div>
+            <div class="auto-rank-body">
+              <h4 class="auto-rank-subject">${item.name}</h4>
+              <div class="auto-rank-pct">${item.val}%</div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      box.innerHTML = html;
     },
 
     updateProgress() {
