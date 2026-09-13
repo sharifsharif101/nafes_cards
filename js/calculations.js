@@ -16,7 +16,7 @@ function readNumber(value) {
 
 const CALCULATIONS = {
 
-  // الغياب = العدد الكلي − المختبرات
+  // الغياب = العدد الكلي − المختبرين
   absent(values) {
     const total = readNumber(values.total);
     const tested = readNumber(values.tested);
@@ -24,7 +24,7 @@ const CALCULATIONS = {
     return Math.max(total - tested, 0);
   },
 
-  // نسبة المختبرات = المختبرات ÷ الكلي × 100
+  // نسبة المختبرين = المختبرين ÷ الكلي × 100
   rate(values) {
     const total = readNumber(values.total);
     if (total === null || total === 0) {
@@ -80,12 +80,12 @@ const CALCULATIONS = {
 // كل فحص يعيد رسالة خطأ عند وجود تعارض، أو null إذا كانت البيانات سليمة
 const VALIDATIONS = {
 
-  // عدد المختبرات يجب ألا يتجاوز العدد الكلي
+  // عدد المختبرين يجب ألا يتجاوز العدد الكلي
   "tested-vs-total"(values) {
     const total = readNumber(values.total);
     const tested = readNumber(values.tested);
     if (total !== null && tested !== null && tested > total) {
-      return "تنبيه: عدد المختبرات أكبر من العدد الكلي — رجاءً راجعي الأرقام.";
+      return "تنبيه: عدد المختبرين أكبر من العدد الكلي — رجاءً راجع الأرقام.";
     }
     return null;
   },

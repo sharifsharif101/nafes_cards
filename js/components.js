@@ -38,7 +38,7 @@ function makeChartCard(section, spec, ctx) {
   if (ctx && ctx.id) canvas.dataset.subId = ctx.id;
   canvas._homeBox = box; // الموضع الأساس الذي يعود إليه بعد إغلاق المودال
 
-  const msg = el("div", "chart-empty-msg", spec.emptyText || "أدخلي البيانات لعرض الرسم البياني");
+  const msg = el("div", "chart-empty-msg", spec.emptyText || "أدخل البيانات لعرض الرسم البياني");
   box.append(canvas, msg);
   card.append(box);
 
@@ -201,7 +201,7 @@ const SECTION_BUILDERS = {
       const card = el("div", "subdomain-card");
       
       const cardHeader = el("div", "subdomain-card-header");
-      const title = el("h3", "subdomain-title", "نسبة الطالبات اللاتي اجتزن مستوى الحد الأدنى للإتقان في المجالات الفرعية لمجال: " + sub.label.replace("مجال: ", ""));
+      const title = el("h3", "subdomain-title", "نسبة الطلاب الذين اجتازوا مستوى الحد الأدنى للإتقان في المجالات الفرعية لمجال: " + sub.label.replace("مجال: ", ""));
       cardHeader.append(title);
 
       // كتلة "معلومات المقارنة" (اكتب نسبة الإدارة عام 2026 - اكتب نسبة المملكة عام 2026)
@@ -227,8 +227,8 @@ const SECTION_BUILDERS = {
       thead.innerHTML = `
         <tr>
           <th>المجال الفرعي</th>
-          <th>نسبة المجتازات 2026</th>
-          <th>نسبة المجتازات 2025</th>
+          <th>نسبة المجتازين 2026</th>
+          <th>نسبة المجتازين 2025</th>
           <th>مقدار التغير عن 2025</th>
           <th>مقارنة بمتوسط الإدارة</th>
           <th>مقارنة بمتوسط المملكة</th>
@@ -365,9 +365,9 @@ const SECTION_BUILDERS = {
     const teamGrid = el("div", "team-grid");
 
     const roles = [
-      { id: "team-supervisors", label: "المشرفات", placeholder: "أسماء المشرفات والصفة" },
-      { id: "team-teachers",    label: "المعلمات",   placeholder: "أسماء المعلمات المنفذات" },
-      { id: "team-principal",   label: "مديرة المدرسة", placeholder: "اسم مديرة المدرسة" },
+      { id: "team-supervisors", label: "المشرفون", placeholder: "أسماء المشرفين والصفة" },
+      { id: "team-teachers",    label: "المعلمون",   placeholder: "أسماء المعلمين المنفذين" },
+      { id: "team-principal",   label: "مدير المدرسة", placeholder: "اسم مدير المدرسة" },
     ];
 
     roles.forEach(role => {

@@ -103,8 +103,8 @@
       <div class="field"><label>التاريخ</label><input type="date" id="date"></div>
       <div class="field"><label>اسم المدرسة</label><input type="text" id="school" placeholder="اكتب اسم المدرسة"></div>
       <div class="field"><label>الصف الدراسي</label><input type="text" id="grade" placeholder="مثال: السادس الابتدائي"></div>
-      <div class="field"><label>عدد الطالبات الكلي</label><input type="number" id="total" min="0" placeholder="0"></div>
-      <div class="field"><label>عدد المختبرات</label><input type="number" id="tested" min="0" placeholder="0"></div>
+      <div class="field"><label>عدد الطلاب الكلي</label><input type="number" id="total" min="0" placeholder="0"></div>
+      <div class="field"><label>عدد المختبرين</label><input type="number" id="tested" min="0" placeholder="0"></div>
     </div>
   </section>
 
@@ -117,7 +117,7 @@
         <div class="value" id="absent">—</div>
       </div>
       <div class="stat">
-        <div class="label">نسبة المختبرات من العدد الكلي</div>
+        <div class="label">نسبة المختبرين من العدد الكلي</div>
         <div class="value warn" id="rate">انتظر البيانات</div>
       </div>
     </div>
@@ -125,7 +125,7 @@
 
   <!-- مقارنة السنتين -->
   <section class="card">
-    <h2>نسبة المجتازات للحد الأدنى للإتقان في المجالات معًا</h2>
+    <h2>نسبة المجتازين للحد الأدنى للإتقان في المجالات معًا</h2>
     <div class="compare-grid">
       <div class="compare-box">
         <h3>عام 2025</h3>
@@ -157,14 +157,14 @@
     const total = num("total"), tested = num("tested");
     const a = num("y2025"), b = num("y2026");
 
-    // الغياب = الكلي - المختبرات
+    // الغياب = الكلي - المختبرين
     if (total !== null && tested !== null) {
       $("absent").textContent = Math.max(total - tested, 0);
     } else {
       $("absent").textContent = "—";
     }
 
-    // نسبة المختبرات (بدون رسالة خطأ)
+    // نسبة المختبرين (بدون رسالة خطأ)
     const rate = $("rate");
     if (total === null || total === 0) {
       rate.textContent = "انتظر البيانات";

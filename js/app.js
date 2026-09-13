@@ -133,7 +133,7 @@
       const principalNode = document.getElementById("cover-principal-display");
       const yearNode = document.getElementById("cover-year-display");
 
-      // مزامنة ثنائية بين خانة مديرة المدرسة في البيانات الأساسية وفريق العمل
+      // مزامنة ثنائية بين خانة مدير المدرسة في البيانات الأساسية وفريق العمل
       const pBasic = document.getElementById("principal");
       const pTeam = document.getElementById("team-principal");
       if (pBasic && pTeam) {
@@ -163,11 +163,11 @@
         }
       }
 
-      // 3) مديرة المدرسة
+      // 3) مدير المدرسة
       if (principalNode) {
         const val = (values["principal"] || values["team-principal"] || "").trim();
         if (val) {
-          principalNode.textContent = val.startsWith("مديرة المدرسة") ? val : ("مديرة المدرسة / " + val);
+          principalNode.textContent = val.startsWith("مدير المدرسة") ? val : ("مدير المدرسة / " + val);
         } else {
           principalNode.textContent = "";
         }
@@ -399,7 +399,7 @@
     },
 
     clearAll() {
-      if (!confirm("هل أنت متأكدة من مسح جميع البيانات؟ لا يمكن التراجع.")) return;
+      if (!confirm("هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع.")) return;
       document.querySelectorAll("#report input, #report textarea").forEach(i => { i.value = ""; });
       StorageManager.clearAll();
       this.switchTab(TABS[0].id, false);
