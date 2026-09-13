@@ -231,19 +231,60 @@
         .filter(s => s.type === "subject-cards")
         .forEach(sec => {
           sec.subjects.forEach(sub => {
-            // تحديث الأعداد الفعلية لمستويات الأداء
-            (sec.levelColumns || []).forEach(lvl => {
-              const countNode = document.getElementById(sub.id + "-" + lvl.id + "-count");
-              if (countNode) {
-                const pctNum = parseFloat(values[sub.id + "-" + lvl.id]);
-                if (!isNaN(testedNum) && testedNum > 0 && !isNaN(pctNum)) {
-                  const count = Math.round((pctNum / 100) * testedNum);
-                  countNode.textContent = "عدد الطلاب: " + count;
-                } else {
-                  countNode.textContent = "عدد الطلاب: —";
-                }
+            // تحديث الأعداد الفعلية لمستويات الأداء باستخدام خوارزمية المتبقي الأكبر (Largest Remainder Method)
+            const levelCols = sec.levelColumns || [];
+            const levelData = [];
+            let totalPct = 0;
+
+            levelCols.forEach(lvl => {
+              const pctNum = parseFloat(values[sub.id + "-" + lvl.id]);
+              if (!isNaN(pctNum)) {
+                levelData.push({ lvl, pctNum });
+                totalPct += pctNum;
               }
             });
+
+            if (!isNaN(testedNum) && testedNum > 0 && levelData.length > 0) {
+              // حساب العدد الدقيق والعدد الصحيح والمتبقي لكل مستوى
+              const calcItems = levelData.map(item => {
+                const exact = (item.pctNum / 100) * testedNum;
+                const floor = Math.floor(exact);
+                const remainder = exact - floor;
+                return { id: item.lvl.id, floor, remainder, finalCount: floor };
+              });
+
+              const sumFloor = calcItems.reduce((acc, curr) => acc + curr.floor, 0);
+              let diff = testedNum - sumFloor;
+
+              // إذا كان هناك فرق في المجموع بسبب التقريب وكان مجموع النسب قريباً من 100%
+              if (diff > 0 && diff < levelData.length) {
+                // ترتيب المستويات حسب أعلى متبقي (Remainder) لتوزيع الطلاب المتبقين
+                const sorted = [...calcItems].sort((a, b) => b.remainder - a.remainder);
+                for (let i = 0; i < diff; i++) {
+                  sorted[i].finalCount += 1;
+                }
+              }
+
+              // عرض النتيجة النهائية لكل مستوى
+              levelCols.forEach(lvl => {
+                const countNode = document.getElementById(sub.id + "-" + lvl.id + "-count");
+                if (countNode) {
+                  const found = calcItems.find(c => c.id === lvl.id);
+                  if (found) {
+                    countNode.textContent = "عدد الطلاب: " + found.finalCount;
+                  } else {
+                    countNode.textContent = "عدد الطلاب: —";
+                  }
+                }
+              });
+            } else {
+              levelCols.forEach(lvl => {
+                const countNode = document.getElementById(sub.id + "-" + lvl.id + "-count");
+                if (countNode) {
+                  countNode.textContent = "عدد الطلاب: —";
+                }
+              });
+            }
 
             const y2026 = values[sub.id + "-y2026"];
             const y2025 = values[sub.id + "-y2025"];
