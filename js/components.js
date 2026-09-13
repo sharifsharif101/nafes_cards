@@ -55,7 +55,7 @@ const SECTION_BUILDERS = {
       const wrap = el("div", "field");
       const label = el("label", null, f.label);
       label.htmlFor = f.id;
-      if (f.tooltip) label.setAttribute("data-tooltip", f.tooltip);
+      // if (f.tooltip) label.setAttribute("data-tooltip", f.tooltip);
       const input = document.createElement("input");
       input.type = f.type;
       input.id = f.id;
@@ -75,7 +75,7 @@ const SECTION_BUILDERS = {
       const value = el("div", "value placeholder", "—");
       value.id = s.id;
       const labelNode = el("div", "label", s.label);
-      if (s.tooltip) labelNode.setAttribute("data-tooltip", s.tooltip);
+      // if (s.tooltip) labelNode.setAttribute("data-tooltip", s.tooltip);
       box.append(labelNode, value);
       grid.append(box);
     });
@@ -97,7 +97,7 @@ const SECTION_BUILDERS = {
     section.inputs.forEach(inp => {
       const box = el("div", "compare-box");
       const titleNode = el("h3", null, inp.label);
-      if (inp.tooltip) titleNode.setAttribute("data-tooltip", inp.tooltip);
+      // if (inp.tooltip) titleNode.setAttribute("data-tooltip", inp.tooltip);
       const input = document.createElement("input");
       input.type = "number";
       input.id = inp.id;
@@ -130,19 +130,26 @@ const SECTION_BUILDERS = {
       return input;
     }
 
-    function makeField(subjectId, col) {
+    function makeField(subjectId, col, isLevel = false) {
       const field = el("div", "field");
       const label = el("label", null, col.label);
       label.htmlFor = subjectId + "-" + col.id;
-      if (col.tooltip) label.setAttribute("data-tooltip", col.tooltip);
+      // if (col.tooltip) label.setAttribute("data-tooltip", col.tooltip);
       field.append(label, makeInput(subjectId + "-" + col.id));
+
+      if (isLevel) {
+        const countBox = el("div", "level-count", "العدد الفعلي: —");
+        countBox.id = subjectId + "-" + col.id + "-count";
+        field.append(countBox);
+      }
+
       return field;
     }
 
     function makeCalcDisplay(subjectId, col) {
       const box = el("div", "calc-box");
       const label = el("span", "calc-label", col.label);
-      if (col.tooltip) label.setAttribute("data-tooltip", col.tooltip);
+      // if (col.tooltip) label.setAttribute("data-tooltip", col.tooltip);
       const valNode = el("span", "calc-val placeholder", "—");
       valNode.id = subjectId + "-" + col.id;
       box.append(label, valNode);
@@ -164,7 +171,7 @@ const SECTION_BUILDERS = {
       const body = el("div", "subject-body");
 
       const levelsRow = el("div", "levels-row");
-      section.levelColumns.forEach(c => levelsRow.append(makeField(s.id, c)));
+      section.levelColumns.forEach(c => levelsRow.append(makeField(s.id, c, true)));
 
       const percentsRow = el("div", "percents-row");
       section.percentColumns.forEach(c => percentsRow.append(makeField(s.id, c)));

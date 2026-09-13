@@ -150,7 +150,7 @@
       // 1) اسم المدرسة
       if (schoolNode) {
         const val = (values["school"] || "").trim();
-        schoolNode.textContent = val || "الابتدائية الثانية والستون بعد الثلاثمائة ٣٦٢";
+        schoolNode.textContent = val;
       }
 
       // 2) الصف الدراسي
@@ -159,7 +159,7 @@
         if (val) {
           gradeNode.textContent = val.startsWith("للصف") ? val : ("للصف " + val);
         } else {
-          gradeNode.textContent = "للصف السادس الابتدائي";
+          gradeNode.textContent = "";
         }
       }
 
@@ -179,7 +179,7 @@
         if (val) {
           yearNode.textContent = val.endsWith("هـ") ? val : (val + "هـ");
         } else {
-          yearNode.textContent = "١٤٤٦هـ";
+          yearNode.textContent = "";
         }
       }
     },
@@ -226,10 +226,25 @@
     },
 
     updateSubjectCalcs(values) {
+      const testedNum = parseFloat(values["tested"]);
       REPORT_SECTIONS
         .filter(s => s.type === "subject-cards")
         .forEach(sec => {
           sec.subjects.forEach(sub => {
+            // تحديث الأعداد الفعلية لمستويات الأداء
+            (sec.levelColumns || []).forEach(lvl => {
+              const countNode = document.getElementById(sub.id + "-" + lvl.id + "-count");
+              if (countNode) {
+                const pctNum = parseFloat(values[sub.id + "-" + lvl.id]);
+                if (!isNaN(testedNum) && testedNum > 0 && !isNaN(pctNum)) {
+                  const count = Math.round((pctNum / 100) * testedNum);
+                  countNode.textContent = "العدد الفعلي: " + count;
+                } else {
+                  countNode.textContent = "العدد الفعلي: —";
+                }
+              }
+            });
+
             const y2026 = values[sub.id + "-y2026"];
             const y2025 = values[sub.id + "-y2025"];
             const admin = values[sub.id + "-admin2026"];
