@@ -204,18 +204,18 @@ const SECTION_BUILDERS = {
       const title = el("h3", "subdomain-title", "نسبة الطالبات اللاتي اجتزن مستوى الحد الأدنى للإتقان في المجالات الفرعية لمجال: " + sub.label.replace("مجال: ", ""));
       cardHeader.append(title);
 
-      // كتلة "معلومات المقارنة" (اكتب نسبة الإدارة عام 2025 - اكتب نسبة المملكة عام 2025)
+      // كتلة "معلومات المقارنة" (اكتب نسبة الإدارة عام 2026 - اكتب نسبة المملكة عام 2026)
       const infoBox = el("div", "compare-info-card");
       infoBox.innerHTML = `
-        <div class="compare-info-header">معلومات المقارنة (عام 2025)</div>
+        <div class="compare-info-header">معلومات المقارنة (عام 2026)</div>
         <div class="compare-info-body">
           <div class="compare-info-field admin-field">
-            <label for="sub-${sub.id}-admin2025">اكتب نسبة الإدارة عام 2025</label>
-            <input type="number" id="sub-${sub.id}-admin2025" min="0" max="100" step="0.1" placeholder="مثال: 75">
+            <label for="sub-${sub.id}-admin2026">اكتب نسبة الإدارة عام 2026</label>
+            <input type="number" id="sub-${sub.id}-admin2026" min="0" max="100" step="0.1" placeholder="مثال: 75">
           </div>
           <div class="compare-info-field kingdom-field">
-            <label for="sub-${sub.id}-kingdom2025">اكتب نسبة المملكة عام 2025</label>
-            <input type="number" id="sub-${sub.id}-kingdom2025" min="0" max="100" step="0.1" placeholder="مثال: 70">
+            <label for="sub-${sub.id}-kingdom2026">اكتب نسبة المملكة عام 2026</label>
+            <input type="number" id="sub-${sub.id}-kingdom2026" min="0" max="100" step="0.1" placeholder="مثال: 70">
           </div>
         </div>
       `;
@@ -227,9 +227,9 @@ const SECTION_BUILDERS = {
       thead.innerHTML = `
         <tr>
           <th>المجال الفرعي</th>
+          <th>نسبة المجتازات 2026</th>
           <th>نسبة المجتازات 2025</th>
-          <th>نسبة المجتازات 2024</th>
-          <th>مقدار التغير عن 2024</th>
+          <th>مقدار التغير عن 2025</th>
           <th>مقارنة بمتوسط الإدارة</th>
           <th>مقارنة بمتوسط المملكة</th>
         </tr>
@@ -243,25 +243,25 @@ const SECTION_BUILDERS = {
 
         const tdLabel = el("td", "domain-name", item.label);
 
-        // نسبة 2025 (إدخال)
+        // نسبة 2026 (إدخال)
+        const td2026 = document.createElement("td");
+        const in2026 = document.createElement("input");
+        in2026.type = "number";
+        in2026.id = `sub-${sub.id}-${item.id}-y2026`;
+        in2026.min = "0"; in2026.max = "100"; in2026.step = "0.1";
+        in2026.placeholder = "0.0%";
+        td2026.append(in2026);
+
+        // نسبة 2025 (إدخال إن توفرت)
         const td2025 = document.createElement("td");
         const in2025 = document.createElement("input");
         in2025.type = "number";
         in2025.id = `sub-${sub.id}-${item.id}-y2025`;
         in2025.min = "0"; in2025.max = "100"; in2025.step = "0.1";
-        in2025.placeholder = "0.0%";
+        in2025.placeholder = "غير متوفرة";
         td2025.append(in2025);
 
-        // نسبة 2024 (إدخال إن توفرت)
-        const td2024 = document.createElement("td");
-        const in2024 = document.createElement("input");
-        in2024.type = "number";
-        in2024.id = `sub-${sub.id}-${item.id}-y2024`;
-        in2024.min = "0"; in2024.max = "100"; in2024.step = "0.1";
-        in2024.placeholder = "غير متوفرة";
-        td2024.append(in2024);
-
-        // مقدار التغير عن 2024 (محسوب تلقائياً)
+        // مقدار التغير عن 2025 (محسوب تلقائياً)
         const tdChange = document.createElement("td");
         const valChange = el("span", "calc-val placeholder", "—");
         valChange.id = `sub-${sub.id}-${item.id}-diff-change`;
@@ -279,7 +279,7 @@ const SECTION_BUILDERS = {
         valKingdom.id = `sub-${sub.id}-${item.id}-diff-kingdom`;
         tdKingdom.append(valKingdom);
 
-        tr.append(tdLabel, td2025, td2024, tdChange, tdAdmin, tdKingdom);
+        tr.append(tdLabel, td2026, td2025, tdChange, tdAdmin, tdKingdom);
         tbody.append(tr);
       });
 

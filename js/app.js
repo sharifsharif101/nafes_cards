@@ -230,17 +230,17 @@
         .filter(s => s.type === "subject-cards")
         .forEach(sec => {
           sec.subjects.forEach(sub => {
+            const y2026 = values[sub.id + "-y2026"];
             const y2025 = values[sub.id + "-y2025"];
-            const y2024 = values[sub.id + "-y2024"];
-            const admin = values[sub.id + "-admin2025"];
-            const kingdom = values[sub.id + "-kingdom2025"];
-            const target = values[sub.id + "-target2025"];
+            const admin = values[sub.id + "-admin2026"];
+            const kingdom = values[sub.id + "-kingdom2026"];
+            const target = values[sub.id + "-target2026"];
 
             const diffs = [
-              { id: sub.id + "-diff-change",  result: CALCULATIONS.diff(y2025, y2024) },
-              { id: sub.id + "-diff-admin",   result: CALCULATIONS.diff(y2025, admin) },
-              { id: sub.id + "-diff-kingdom", result: CALCULATIONS.diff(y2025, kingdom) },
-              { id: sub.id + "-diff-target",  result: CALCULATIONS.diff(y2025, target) },
+              { id: sub.id + "-diff-change",  result: CALCULATIONS.diff(y2026, y2025) },
+              { id: sub.id + "-diff-admin",   result: CALCULATIONS.diff(y2026, admin) },
+              { id: sub.id + "-diff-kingdom", result: CALCULATIONS.diff(y2026, kingdom) },
+              { id: sub.id + "-diff-target",  result: CALCULATIONS.diff(y2026, target) },
             ];
 
             diffs.forEach(d => {
@@ -260,8 +260,8 @@
         .forEach(sec => {
           sec.subjectSubdomains.forEach(sub => {
             // مزامنة تلقائية ثنائية الاتجاه واختبار القيم الصريحة
-            const inTab2Admin = document.getElementById(sub.id + "-admin2025");
-            const inTab3Admin = document.getElementById("sub-" + sub.id + "-admin2025");
+            const inTab2Admin = document.getElementById(sub.id + "-admin2026");
+            const inTab3Admin = document.getElementById("sub-" + sub.id + "-admin2026");
             if (inTab2Admin && inTab3Admin) {
               if (inTab3Admin.value !== inTab2Admin.value) {
                 if (document.activeElement === inTab3Admin) {
@@ -278,8 +278,8 @@
               }
             }
 
-            const inTab2Kingdom = document.getElementById(sub.id + "-kingdom2025");
-            const inTab3Kingdom = document.getElementById("sub-" + sub.id + "-kingdom2025");
+            const inTab2Kingdom = document.getElementById(sub.id + "-kingdom2026");
+            const inTab3Kingdom = document.getElementById("sub-" + sub.id + "-kingdom2026");
             if (inTab2Kingdom && inTab3Kingdom) {
               if (inTab3Kingdom.value !== inTab2Kingdom.value) {
                 if (document.activeElement === inTab3Kingdom) {
@@ -296,25 +296,25 @@
               }
             }
 
-            const adminVal = inTab3Admin ? inTab3Admin.value : (values["sub-" + sub.id + "-admin2025"] || "");
-            const kingdomVal = inTab3Kingdom ? inTab3Kingdom.value : (values["sub-" + sub.id + "-kingdom2025"] || "");
+            const adminVal = inTab3Admin ? inTab3Admin.value : (values["sub-" + sub.id + "-admin2026"] || "");
+            const kingdomVal = inTab3Kingdom ? inTab3Kingdom.value : (values["sub-" + sub.id + "-kingdom2026"] || "");
 
             // تنبيه بصري على الخانات العلوية إذا تم إدخال نتائج بدون تحديد نسبة الإدارة أو المملكة
-            const hasAnyItem2025 = sub.items.some(item => (values[`sub-${sub.id}-${item.id}-y2025`] || "").trim() !== "");
+            const hasAnyItem2026 = sub.items.some(item => (values[`sub-${sub.id}-${item.id}-y2026`] || "").trim() !== "");
             if (inTab3Admin) {
-              inTab3Admin.classList.toggle("missing-required", hasAnyItem2025 && adminVal.trim() === "");
+              inTab3Admin.classList.toggle("missing-required", hasAnyItem2026 && adminVal.trim() === "");
             }
             if (inTab3Kingdom) {
-              inTab3Kingdom.classList.toggle("missing-required", hasAnyItem2025 && kingdomVal.trim() === "");
+              inTab3Kingdom.classList.toggle("missing-required", hasAnyItem2026 && kingdomVal.trim() === "");
             }
 
             sub.items.forEach(item => {
+              const item2026 = values[`sub-${sub.id}-${item.id}-y2026`];
               const item2025 = values[`sub-${sub.id}-${item.id}-y2025`];
-              const item2024 = values[`sub-${sub.id}-${item.id}-y2024`];
 
-              const diffChange = CALCULATIONS.diff(item2025, item2024, "2024");
-              const diffAdmin = CALCULATIONS.diff(item2025, adminVal, "نسبة الإدارة");
-              const diffKingdom = CALCULATIONS.diff(item2025, kingdomVal, "نسبة المملكة");
+              const diffChange = CALCULATIONS.diff(item2026, item2025, "2025");
+              const diffAdmin = CALCULATIONS.diff(item2026, adminVal, "نسبة الإدارة");
+              const diffKingdom = CALCULATIONS.diff(item2026, kingdomVal, "نسبة المملكة");
 
               const changeNode = document.getElementById(`sub-${sub.id}-${item.id}-diff-change`);
               if (changeNode) {

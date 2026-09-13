@@ -128,12 +128,12 @@
     <h2>نسبة المجتازات للحد الأدنى للإتقان في المجالات معًا</h2>
     <div class="compare-grid">
       <div class="compare-box">
-        <h3>عام 2024</h3>
-        <input type="number" id="y2024" min="0" max="100" step="0.1" placeholder="%">
-      </div>
-      <div class="compare-box">
         <h3>عام 2025</h3>
         <input type="number" id="y2025" min="0" max="100" step="0.1" placeholder="%">
+      </div>
+      <div class="compare-box">
+        <h3>عام 2026</h3>
+        <input type="number" id="y2026" min="0" max="100" step="0.1" placeholder="%">
       </div>
     </div>
     <div class="change-banner" id="banner">
@@ -155,7 +155,7 @@
 
   function update() {
     const total = num("total"), tested = num("tested");
-    const a = num("y2024"), b = num("y2025");
+    const a = num("y2025"), b = num("y2026");
 
     // الغياب = الكلي - المختبرات
     if (total !== null && tested !== null) {
@@ -191,7 +191,7 @@
     }
   }
 
-  ["total", "tested", "y2024", "y2025"].forEach(id => $(id).addEventListener("input", update));
+  ["total", "tested", "y2025", "y2026"].forEach(id => $(id).addEventListener("input", update));
 </script>
 </body>
 </html>

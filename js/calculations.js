@@ -35,10 +35,10 @@ const CALCULATIONS = {
     return { text: pct.toFixed(1) + "%", placeholder: false };
   },
 
-  // مقدار التغيير = نتيجة 2025 − نتيجة 2024
+  // مقدار التغيير = نتيجة 2026 − نتيجة 2025
   change(values) {
-    const a = readNumber(values.y2024);
-    const b = readNumber(values.y2025);
+    const a = readNumber(values.y2025);
+    const b = readNumber(values.y2026);
     if (a === null || b === null) {
       return { text: PLACEHOLDER, direction: "none" };
     }

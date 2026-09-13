@@ -30,16 +30,16 @@
   ];
 
   const BENCHMARKS = [
-    { key: "y2025",       label: "المدرسة 2025",  color: "#048680" },
-    { key: "y2024",       label: "المدرسة 2024",  color: "#9fb3c8" },
-    { key: "admin2025",   label: "متوسط الإدارة", color: "#f2b234" },
-    { key: "kingdom2025", label: "المتوسط الوطني", color: "#7a5cc4" },
-    { key: "target2025",  label: "المستهدف",      color: "#e05252" },
+    { key: "y2026",       label: "المدرسة 2026",  color: "#048680" },
+    { key: "y2025",       label: "المدرسة 2025",  color: "#9fb3c8" },
+    { key: "admin2026",   label: "متوسط الإدارة", color: "#f2b234" },
+    { key: "kingdom2026", label: "المتوسط الوطني", color: "#7a5cc4" },
+    { key: "target2026",  label: "المستهدف",      color: "#e05252" },
   ];
 
   const YEAR_SERIES = [
-    { key: "y2025", label: "2025", color: "#048680" },
-    { key: "y2024", label: "2024", color: "#9fb3c8" },
+    { key: "y2026", label: "2026", color: "#048680" },
+    { key: "y2025", label: "2025", color: "#9fb3c8" },
   ];
 
   const FONT = "'IBM Plex Sans Arabic', 'Segoe UI', sans-serif";
@@ -87,7 +87,7 @@
       return hasData ? { labels, datasets } : null;
     },
 
-    // مخطط أفق تجمعي: المجالات الفرعية — 2025 مقابل 2024
+    // مخطط أفق تجمعي: المجالات الفرعية — 2026 مقابل 2025
     "subdomains"(values, sub) {
       const labels = sub.items.map(i => i.label);
       const datasets = YEAR_SERIES.map(y => ({
