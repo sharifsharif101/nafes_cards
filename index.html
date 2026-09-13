@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تقرير متابعة اختبارات نافس 1447هـ</title>
+<title>البطاقة الفنية لبطاقة نافس 1447هـ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
@@ -61,7 +61,7 @@
 
   <header class="masthead">
     <div class="masthead-meta">المملكة العربية السعودية — وزارة التعليم</div>
-    <h1>تقرير متابعة الاختبارات الوطنية نافس</h1>
+    <h1>البطاقة الفنية لبطاقة نافس</h1>
     <p>للعام الدراسي 1447هـ — إعداد: الأستاذ بدر عبدالله الصبي</p>
     <div class="progress-wrap">
       <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
@@ -69,13 +69,27 @@
     </div>
   </header>
 
-  <div class="toolbar no-print">
-    <button id="btn-export-pdf" class="btn btn-export" type="button">📄 طباعة / تصدير PDF</button>
-    <button id="btn-clear" class="btn btn-danger" type="button">مسح البيانات</button>
-    <span class="save-note" id="save-note"></span>
+  <div class="tabs-nav-bar no-print">
+    <nav class="tabs" id="tabs"></nav>
+    <div class="toolbar" id="toolbar">
+      <span class="save-note" id="save-note"></span>
+      <button id="btn-export-pdf" class="btn btn-export" type="button" title="طباعة أو حفظ التقرير بصيغة PDF">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9V2h12v7"></path>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span>طباعة / تصدير PDF</span>
+      </button>
+      <button id="btn-clear" class="btn btn-danger" type="button" title="مسح جميع المدخلات والبدء من جديد">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        <span>مسح البيانات</span>
+      </button>
+    </div>
   </div>
-
-  <nav class="tabs no-print" id="tabs"></nav>
 
   <!-- الأقسام تُبنى تلقائيًا من js/config.js بواسطة js/app.js -->
   <main id="report"></main>

@@ -186,9 +186,11 @@
           p.classList.add("print-force-visible");
           if (p.clientWidth === 0) p.style.display = "block"; // إن لم تُطبَّق وسائط الطباعة بعد
         });
-        // إن بقي رسم ما بعرض صفر فنثبّت عرضاً بديلاً (آخر عرض معروف)
+        // إن بقي رسم ما بعرض صفر فنثبّت عرضاً بديلاً آمناً لا يتجاوز عرض A4
+        const reportEl = document.getElementById("report");
+        const safeWidth = reportEl ? Math.min(reportEl.clientWidth || 650, 650) : 650;
         document.querySelectorAll("canvas[data-chart-type]").forEach(c => {
-          if (c.clientWidth === 0) c.parentElement.style.width = (this.lastWidths[c.id] || 780) + "px";
+          if (c.clientWidth === 0) c.parentElement.style.width = safeWidth + "px";
         });
         this.update();
       });

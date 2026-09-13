@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>البطاقة الفنية لبطاقة نافس 1447هـ</title>
+<style>
+  :root {
+    --primary: #1e6091;
+    --primary-light: #e8f1f8;
+    --accent: #2a9d8f;
+    --danger: #e63946;
+    --bg: #f4f7fa;
+    --card: #ffffff;
+    --border: #d7e3ee;
+    --text: #22333b;
+    --muted: #6c7a89;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Arial, sans-serif; }
+  body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 12px; }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, var(--primary), #14507c);
+    color: #fff; border-radius: 14px; padding: 24px 20px; text-align: center;
+    box-shadow: 0 4px 14px rgba(30, 96, 145, .25);
+    margin-bottom: 24px;
+  }
+  header h1 { font-size: 1.4rem; margin-bottom: 6px; }
+  header p { opacity: .85; font-size: .95rem; }
+
+  .card {
+    background: var(--card); border-radius: 14px; padding: 20px;
+    box-shadow: 0 2px 8px rgba(34, 51, 59, .07);
+    margin-bottom: 20px; border: 1px solid var(--border);
+  }
+  .card h2 {
+    font-size: 1.05rem; color: var(--primary); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h2::before {
+    content: ""; width: 5px; height: 20px; background: var(--accent);
+    border-radius: 3px; display: inline-block;
+  }
+
+  /* جدول البيانات الأساسية */
+  .basic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .field label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 5px; }
+  .field input {
+    width: 100%; padding: 10px 12px; border: 1.5px solid var(--border);
+    border-radius: 9px; font-size: 1rem; background: var(--primary-light);
+    transition: border .2s, background .2s;
+  }
+  .field input:focus { outline: none; border-color: var(--primary); background: #fff; }
+
+  /* بطاقات النتائج */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .stat {
+    border-radius: 12px; padding: 16px; text-align: center;
+    background: var(--primary-light); border: 1px solid var(--border);
+  }
+  .stat .label { font-size: .9rem; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .stat .value { font-size: 1.7rem; font-weight: 700; color: var(--primary); }
+  .stat .value.warn { color: var(--muted); font-size: 1.15rem; font-weight: 500; }
+
+  /* مقارنة السنتين */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-box { border-radius: 12px; padding: 16px; border: 1.5px solid var(--border); }
+  .compare-box h3 { font-size: .95rem; color: var(--muted); margin-bottom: 10px; text-align: center; }
+  .compare-box input {
+    width: 100%; padding: 10px; font-size: 1.2rem; text-align: center;
+    border: 1.5px solid var(--border); border-radius: 9px; background: #fafcfe;
+  }
+  .compare-box input:focus { outline: none; border-color: var(--accent); }
+
+  .change-banner {
+    margin-top: 16px; text-align: center; padding: 16px;
+    border-radius: 12px; background: var(--primary-light);
+    font-size: 1.05rem; color: var(--muted);
+  }
+  .change-banner .num { font-size: 1.9rem; font-weight: 700; margin-inline-start: 8px; }
+  .change-banner.up   { background: #e7f6f1; color: var(--accent); }
+  .change-banner.down { background: #fdecee; color: var(--danger); }
+
+  footer { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>📊 البطاقة الفنية لبطاقة نافس</h1>
+    <p>للعام الدراسي 1447هـ — الأستاذ بدر عبدالله الصبي</p>
+  </header>
+
+  <!-- البيانات الأساسية -->
+  <section class="card">
+    <h2>البيانات الأساسية</h2>
+    <div class="basic-grid">
+      <div class="field"><label>اليوم</label><input type="text" id="day" placeholder="مثال: الأحد"></div>
+      <div class="field"><label>التاريخ</label><input type="date" id="date"></div>
+      <div class="field"><label>اسم المدرسة</label><input type="text" id="school" placeholder="اكتب اسم المدرسة"></div>
+      <div class="field"><label>الصف الدراسي</label><input type="text" id="grade" placeholder="مثال: السادس الابتدائي"></div>
+      <div class="field"><label>عدد الطالبات الكلي</label><input type="number" id="total" min="0" placeholder="0"></div>
+      <div class="field"><label>عدد المختبرات</label><input type="number" id="tested" min="0" placeholder="0"></div>
+    </div>
+  </section>
+
+  <!-- النتائج المحسوبة -->
+  <section class="card">
+    <h2>النتائج</h2>
+    <div class="stats">
+      <div class="stat">
+        <div class="label">عدد الغياب</div>
+        <div class="value" id="absent">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">نسبة المختبرات من العدد الكلي</div>
+        <div class="value warn" id="rate">انتظر البيانات</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- مقارنة السنتين -->
+  <section class="card">
+    <h2>نسبة المجتازات للحد الأدنى للإتقان في المجالات معًا</h2>
+    <div class="compare-grid">
+      <div class="compare-box">
+        <h3>عام 2024</h3>
+        <input type="number" id="y2024" min="0" max="100" step="0.1" placeholder="%">
+      </div>
+      <div class="compare-box">
+        <h3>عام 2025</h3>
+        <input type="number" id="y2025" min="0" max="100" step="0.1" placeholder="%">
+      </div>
+    </div>
+    <div class="change-banner" id="banner">
+      مقدار التغيير في النتيجة العامة مقارنة بالعام الماضي
+      <span class="num" id="change">—</span>
+    </div>
+  </section>
+
+  <footer>النسب تُحسب تلقائيًا عند إدخال البيانات ✓</footer>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  function num(id) {
+    const v = parseFloat($(id).value);
+    return isNaN(v) ? null : v;
+  }
+
+  function update() {
+    const total = num("total"), tested = num("tested");
+    const a = num("y2024"), b = num("y2025");
+
+    // الغياب = الكلي - المختبرات
+    if (total !== null && tested !== null) {
+      $("absent").textContent = Math.max(total - tested, 0);
+    } else {
+      $("absent").textContent = "—";
+    }
+
+    // نسبة المختبرات (بدون رسالة خطأ)
+    const rate = $("rate");
+    if (total === null || total === 0) {
+      rate.textContent = "انتظر البيانات";
+      rate.classList.add("warn");
+    } else {
+      rate.textContent = (tested !== null ? (tested / total) * 100 : 0).toFixed(1) + "%";
+      rate.classList.remove("warn");
+    }
+
+    // مقدار التغيير
+    const banner = $("banner"), change = $("change");
+    if (a === null || b === null) {
+      change.textContent = "—";
+      banner.classList.remove("up", "down");
+      banner.style.color = "";
+    } else {
+      const diff = b - a;
+      change.textContent = (diff > 0 ? "+" : "") + diff.toFixed(1) + "%";
+      banner.classList.remove("up", "down");
+      if (diff > 0) { banner.classList.add("up");   change.textContent += " 📈"; }
+      if (diff < 0) { banner.classList.add("down"); change.textContent += " 📉"; }
+      if (diff === 0) { change.textContent = "0.0% بدون تغيير"; }
+      banner.style.color = "";
+    }
+  }
+
+  ["total", "tested", "y2024", "y2025"].forEach(id => $(id).addEventListener("input", update));
+</script>
+</body>
+</html>
