@@ -138,7 +138,7 @@ const SECTION_BUILDERS = {
       field.append(label, makeInput(subjectId + "-" + col.id));
 
       if (isLevel) {
-        const countBox = el("div", "level-count", "العدد الفعلي: —");
+        const countBox = el("div", "level-count", "عدد الطلاب: —");
         countBox.id = subjectId + "-" + col.id + "-count";
         field.append(countBox);
       }

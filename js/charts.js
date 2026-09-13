@@ -30,16 +30,16 @@
   ];
 
   const BENCHMARKS = [
-    { key: "y2026",       label: "المدرسة 2026",  color: "#048680" },
     { key: "y2025",       label: "المدرسة 2025",  color: "#9fb3c8" },
+    { key: "y2026",       label: "المدرسة 2026",  color: "#048680" },
     { key: "admin2026",   label: "متوسط الإدارة", color: "#f2b234" },
     { key: "kingdom2026", label: "المتوسط الوطني", color: "#7a5cc4" },
     { key: "target2026",  label: "المستهدف",      color: "#e05252" },
   ];
 
   const YEAR_SERIES = [
-    { key: "y2026", label: "2026", color: "#048680" },
     { key: "y2025", label: "2025", color: "#9fb3c8" },
+    { key: "y2026", label: "2026", color: "#048680" },
   ];
 
   const FONT = "'IBM Plex Sans Arabic', 'Segoe UI', sans-serif";

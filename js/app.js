@@ -238,9 +238,9 @@
                 const pctNum = parseFloat(values[sub.id + "-" + lvl.id]);
                 if (!isNaN(testedNum) && testedNum > 0 && !isNaN(pctNum)) {
                   const count = Math.round((pctNum / 100) * testedNum);
-                  countNode.textContent = "العدد الفعلي: " + count;
+                  countNode.textContent = "عدد الطلاب: " + count;
                 } else {
-                  countNode.textContent = "العدد الفعلي: —";
+                  countNode.textContent = "عدد الطلاب: —";
                 }
               }
             });
