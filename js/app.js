@@ -122,6 +122,7 @@
       this.updateSubjectCalcs(values);
       this.updateSubdomainCalcs(values);
       this.updateAutoRanking(values);
+      this.updateWeakestSubdomains(values);
       this.updateProgress();
       // تحديث الرسوم البيانية بنفس البيانات المحصّلة
       if (window.ChartEngine) ChartEngine.update(values);
@@ -414,6 +415,75 @@
         `;
       });
       html += `</div>`;
+      box.innerHTML = html;
+    },
+
+    updateWeakestSubdomains(values) {
+      const box = document.getElementById("weak-subdomains-box");
+      if (!box) return;
+
+      const subSection = REPORT_SECTIONS.find(s => s.type === "subdomains-cards");
+      if (!subSection || !subSection.subjectSubdomains) return;
+
+      const results = [];
+
+      subSection.subjectSubdomains.forEach(sub => {
+        let minVal = Infinity;
+        let weakItems = [];
+
+        sub.items.forEach(item => {
+          const valStr = values[`sub-${sub.id}-${item.id}-y2026`];
+          const num = parseFloat(valStr);
+          if (!isNaN(num)) {
+            if (num < minVal) {
+              minVal = num;
+              weakItems = [{ label: item.label, val: num }];
+            } else if (num === minVal) {
+              weakItems.push({ label: item.label, val: num });
+            }
+          }
+        });
+
+        if (weakItems.length > 0) {
+          results.push({
+            subjectId: sub.id,
+            subjectLabel: sub.label.replace("مجال: ", "مادة "),
+            weakItems,
+            minVal
+          });
+        }
+      });
+
+      if (results.length === 0) {
+        box.innerHTML = `
+          <div class="weak-subdomain-empty">
+            أدخل نسب اجتياز المدرسة لعام 2026 في <strong>تبويب المجالات الفرعية</strong> لتحديد وعرض المجال الفرعي الأضعف في كل مادة هنا تلقائياً.
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div class="weak-priority-banner">
+          <h3 class="priority-banner-title">المجالات الفرعية الأكثر احتياجاً للتطوير (أدنى نسبة اجتياز للمدرسة):</h3>
+          <ul class="priority-list">
+      `;
+
+      results.forEach(res => {
+        const itemNames = res.weakItems.map(i => i.label).join(" و ");
+        html += `
+          <li class="priority-item">
+            <span class="subject-badge-pill">${res.subjectLabel}</span>
+            <span class="priority-text">المجال الفرعي الأضعف: <strong>${itemNames}</strong> بنسبة اجتياز <strong>${res.minVal}%</strong></span>
+          </li>
+        `;
+      });
+
+      html += `
+          </ul>
+        </div>
+      `;
+
       box.innerHTML = html;
     },
 

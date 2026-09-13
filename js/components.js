@@ -303,7 +303,11 @@ const SECTION_BUILDERS = {
 
     const rankBox = el("div", "auto-rank-box");
     rankBox.id = "auto-rank-box";
-    notesBox.append(rankBox);
+
+    const weakSubdomainBox = el("div", "weak-subdomains-box");
+    weakSubdomainBox.id = "weak-subdomains-box";
+
+    notesBox.append(rankBox, weakSubdomainBox);
 
     // 2) التوصيات
     const recsBox = el("div", "rec-box recs-box");
