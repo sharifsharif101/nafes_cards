@@ -426,20 +426,63 @@
       if (!subSection || !subSection.subjectSubdomains) return;
 
       const results = [];
+      let maxDeptDivergence = null;
+      let maxKingdomDivergence = null;
 
       subSection.subjectSubdomains.forEach(sub => {
         let minVal = Infinity;
         let weakItems = [];
 
+        const subjectName = sub.label.replace("مجال: ", "");
+
         sub.items.forEach(item => {
-          const valStr = values[`sub-${sub.id}-${item.id}-y2026`];
-          const num = parseFloat(valStr);
-          if (!isNaN(num)) {
-            if (num < minVal) {
-              minVal = num;
-              weakItems = [{ label: item.label, val: num }];
-            } else if (num === minVal) {
-              weakItems.push({ label: item.label, val: num });
+          const schoolStr = values[`sub-${sub.id}-${item.id}-y2026`];
+          const adminStr = values[`sub-${sub.id}-${item.id}-admin`];
+          const kingdomStr = values[`sub-${sub.id}-${item.id}-kingdom`];
+
+          const schoolVal = parseFloat(schoolStr);
+          const adminVal = parseFloat(adminStr);
+          const kingdomVal = parseFloat(kingdomStr);
+
+          // 1) أضعف مجال في المدرسة لكل مادة
+          if (!isNaN(schoolVal)) {
+            if (schoolVal < minVal) {
+              minVal = schoolVal;
+              weakItems = [{ label: item.label, val: schoolVal }];
+            } else if (schoolVal === minVal) {
+              weakItems.push({ label: item.label, val: schoolVal });
+            }
+          }
+
+          // 2) أكثر مجال فرعي بعيد عن الإدارة
+          if (!isNaN(schoolVal) && !isNaN(adminVal)) {
+            const diffAdmin = schoolVal - adminVal;
+            const absDiff = Math.abs(diffAdmin);
+            if (!maxDeptDivergence || absDiff > maxDeptDivergence.absDiff) {
+              maxDeptDivergence = {
+                subjectLabel: subjectName,
+                label: item.label,
+                schoolVal,
+                adminVal,
+                diff: diffAdmin,
+                absDiff
+              };
+            }
+          }
+
+          // 3) أكثر مجال فرعي بعيد عن المملكة
+          if (!isNaN(schoolVal) && !isNaN(kingdomVal)) {
+            const diffKingdom = schoolVal - kingdomVal;
+            const absDiff = Math.abs(diffKingdom);
+            if (!maxKingdomDivergence || absDiff > maxKingdomDivergence.absDiff) {
+              maxKingdomDivergence = {
+                subjectLabel: subjectName,
+                label: item.label,
+                schoolVal,
+                kingdomVal,
+                diff: diffKingdom,
+                absDiff
+              };
             }
           }
         });
@@ -447,42 +490,146 @@
         if (weakItems.length > 0) {
           results.push({
             subjectId: sub.id,
-            subjectLabel: sub.label.replace("مجال: ", "مادة "),
+            subjectLabel: "مادة " + subjectName,
             weakItems,
             minVal
           });
         }
       });
 
-      if (results.length === 0) {
+      if (results.length === 0 && !maxDeptDivergence && !maxKingdomDivergence) {
         box.innerHTML = `
           <div class="weak-subdomain-empty">
-            أدخل نسب اجتياز المدرسة لعام 2026 في <strong>تبويب المجالات الفرعية</strong> لتحديد وعرض المجال الفرعي الأضعف في كل مادة هنا تلقائياً.
+            أدخل نسب اجتياز المدرسة والإدارة والمملكة لعام 2026 في <strong>تبويب المجالات الفرعية</strong> لعرض التحليل الإحصائي الآلي للمجالات الأكثر انحرافاً هنا.
           </div>
         `;
         return;
       }
 
-      let html = `
-        <div class="weak-priority-banner">
-          <h3 class="priority-banner-title">المجالات الفرعية الأكثر احتياجاً للتطوير (أدنى نسبة اجتياز للمدرسة):</h3>
-          <ul class="priority-list">
-      `;
+      let html = "";
 
-      results.forEach(res => {
-        const itemNames = res.weakItems.map(i => i.label).join(" و ");
+      // بطاقات الانحراف الأبعد عن الإدارة والمملكة
+      if (maxDeptDivergence || maxKingdomDivergence) {
+        html += `<div class="subdomains-divergence-grid">`;
+
+        // 1. بطاقة الأبعد عن الإدارة
+        if (maxDeptDivergence) {
+          const isLower = maxDeptDivergence.diff < 0;
+          const diffText = isLower
+            ? `أقل بـ ${Math.abs(maxDeptDivergence.diff).toFixed(1)}% من الإدارة`
+            : `أعلى بـ ${maxDeptDivergence.diff.toFixed(1)}% من الإدارة`;
+          
+          const cardClass = isLower ? "danger-border" : "success-border";
+          const badgeClass = isLower ? "danger" : "success";
+          const valClass = isLower ? "danger" : "success";
+
+          const explanation = isLower
+            ? `هذا المجال هو الأكثر تأخراً مقارنة بنسبة الإدارة، ويُمثّل نقطة الضعف الأولى التي تتطلب خطة دعم وتطوير عاجلة.`
+            : `هذا المجال هو الأكثر تفوقاً مقارنة بنسبة الإدارة، ويُمثّل نقطة التميز الأولى للإدارة.`;
+
+          html += `
+            <div class="subdomain-div-card ${cardClass}">
+              <div class="div-card-header">
+                <span class="div-card-badge ${badgeClass}">أكثر مجال فرعي بعيد عن نسبة الإدارة</span>
+              </div>
+              <h4 class="div-subdomain-title">
+                ${maxDeptDivergence.label}
+                <span class="div-subject-tag">${maxDeptDivergence.subjectLabel}</span>
+              </h4>
+              <div class="div-metrics-list">
+                <div class="div-metric-item">
+                  <span class="div-info-label">نسبة اجتياز المدرسة:</span>
+                  <span class="div-info-val">${maxDeptDivergence.schoolVal.toFixed(1)}%</span>
+                </div>
+                <div class="div-metric-item">
+                  <span class="div-info-label">نسبة اجتياز الإدارة:</span>
+                  <span class="div-info-val">${maxDeptDivergence.adminVal.toFixed(1)}%</span>
+                </div>
+                <div class="div-metric-item highlight-row">
+                  <span class="div-info-label">مقدار الانحراف:</span>
+                  <span class="div-info-val ${valClass}">${diffText}</span>
+                </div>
+              </div>
+              <div class="div-explanation-box ${badgeClass}">
+                <strong class="div-result-heading">النتيجة:</strong>
+                <p class="div-result-text">${explanation}</p>
+              </div>
+            </div>
+          `;
+        }
+
+        // 2. بطاقة الأبعد عن المملكة
+        if (maxKingdomDivergence) {
+          const isLower = maxKingdomDivergence.diff < 0;
+          const diffText = isLower
+            ? `أقل بـ ${Math.abs(maxKingdomDivergence.diff).toFixed(1)}% من المملكة`
+            : `أعلى بـ ${maxKingdomDivergence.diff.toFixed(1)}% من المملكة`;
+
+          const cardClass = isLower ? "danger-border" : "success-border";
+          const badgeClass = isLower ? "danger" : "success";
+          const valClass = isLower ? "danger" : "success";
+
+          const explanation = isLower
+            ? `هذا المجال هو الأكثر تأخراً مقارنة بنسبة المملكة، ويُمثّل نقطة الضعف الأولى على المستوى الوطني.`
+            : `هذا المجال هو الأكثر تفوقاً مقارنة بنسبة المملكة، ويُمثّل نقطة التميز والتفوق التنافسي الوطني.`;
+
+          html += `
+            <div class="subdomain-div-card ${cardClass}">
+              <div class="div-card-header">
+                <span class="div-card-badge ${badgeClass}">أكثر مجال فرعي بعيد عن نسبة المملكة</span>
+              </div>
+              <h4 class="div-subdomain-title">
+                ${maxKingdomDivergence.label}
+                <span class="div-subject-tag">${maxKingdomDivergence.subjectLabel}</span>
+              </h4>
+              <div class="div-metrics-list">
+                <div class="div-metric-item">
+                  <span class="div-info-label">نسبة اجتياز المدرسة:</span>
+                  <span class="div-info-val">${maxKingdomDivergence.schoolVal.toFixed(1)}%</span>
+                </div>
+                <div class="div-metric-item">
+                  <span class="div-info-label">نسبة اجتياز المملكة:</span>
+                  <span class="div-info-val">${maxKingdomDivergence.kingdomVal.toFixed(1)}%</span>
+                </div>
+                <div class="div-metric-item highlight-row">
+                  <span class="div-info-label">مقدار الانحراف:</span>
+                  <span class="div-info-val ${valClass}">${diffText}</span>
+                </div>
+              </div>
+              <div class="div-explanation-box ${badgeClass}">
+                <strong class="div-result-heading">النتيجة:</strong>
+                <p class="div-result-text">${explanation}</p>
+              </div>
+            </div>
+          `;
+        }
+
+        html += `</div>`;
+      }
+
+      // أضعف مجال في كل مادة
+      if (results.length > 0) {
         html += `
-          <li class="priority-item">
-            <span class="subject-badge-pill">${res.subjectLabel}</span>
-            <span class="priority-text">المجال الفرعي الأضعف: <strong>${itemNames}</strong> بنسبة اجتياز <strong>${res.minVal}%</strong></span>
-          </li>
+          <div class="weak-priority-banner">
+            <h3 class="priority-banner-title">المجالات الفرعية الأكثر احتياجاً للتطوير (أدنى نسبة اجتياز للمدرسة):</h3>
+            <ul class="priority-list">
         `;
-      });
 
-      html += `
-          </ul>
-        </div>
-      `;
+        results.forEach(res => {
+          const itemNames = res.weakItems.map(i => i.label).join(" و ");
+          html += `
+            <li class="priority-item">
+              <span class="subject-badge-pill">${res.subjectLabel}</span>
+              <span class="priority-text">المجال الفرعي الأضعف: <strong>${itemNames}</strong> بنسبة اجتياز <strong>${res.minVal}%</strong></span>
+            </li>
+          `;
+        });
+
+        html += `
+            </ul>
+          </div>
+        `;
+      }
 
       box.innerHTML = html;
     },
