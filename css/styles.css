@@ -813,9 +813,24 @@ textarea::placeholder {
   margin-bottom: 16px;
 }
 .rec-item {
-  background: #f8fafc; border: 1px solid var(--ui-border); padding: 8px 12px;
-  border-radius: 6px; font-weight: 500; font-size: .92rem; color: var(--text-main);
-  line-height: 1.5;
+  background: #f8fafc; border: 1px solid var(--ui-border); padding: 10px 14px;
+  border-radius: 8px; font-weight: 500; font-size: .92rem; color: var(--text-main);
+  line-height: 1.5; cursor: pointer; display: flex; align-items: center; gap: 12px;
+  transition: all 0.2s ease; user-select: none;
+}
+.rec-item:hover {
+  background: #f1f5f9; border-color: #cbd5e1;
+}
+.rec-item.selected {
+  background: var(--primary-bg-soft, #f5f3ff); border-color: var(--primary, #7c3aed);
+  color: var(--primary-dark, #5b21b6); font-weight: 600;
+}
+.rec-item-checkbox {
+  width: 18px; height: 18px; accent-color: var(--primary, #7c3aed);
+  cursor: pointer; flex-shrink: 0;
+}
+.rec-item-text {
+  flex: 1;
 }
 .extra-rec-field textarea {
   width: 100%; padding: 10px; border: 1px solid var(--ui-border-dark);
@@ -1725,11 +1740,27 @@ textarea::placeholder {
     border: 1px solid #cbd5e1 !important;
   }
   .rec-item {
-    font-size: 8pt !important;
-    padding: 5px 8px !important;
+    display: none !important;
+  }
+  .rec-item.selected {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 8.5pt !important;
+    padding: 6px 10px !important;
     background: #f8fafc !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 4px !important;
     line-height: 1.4 !important;
+  }
+  .rec-item.selected .rec-item-checkbox {
+    display: none !important;
+  }
+  .rec-item.selected::before {
+    content: "✓";
+    font-weight: bold;
+    color: #7c3aed;
+    margin-left: 4px;
   }
   .extra-rec-field textarea {
     font-size: 8.5pt !important;
@@ -1739,6 +1770,10 @@ textarea::placeholder {
     height: auto !important;
     min-height: 45px !important;
     resize: none !important;
+  }
+  .extra-rec-field:has(textarea:placeholder-shown),
+  .extra-rec-field.print-empty {
+    display: none !important;
   }
 
   .team-grid {
@@ -2358,6 +2393,44 @@ textarea::placeholder {
 
 /* الطباعة والتصدير لـ PDF */
 @media print {
+  /* منع انكسار العناصر والصناديق والبطاقات عبر الصفحات */
+  .weak-priority-banner,
+  .priority-item,
+  .subdomain-summary-box,
+  .subdomain-stat-card,
+  .rec-box,
+  .notes-box,
+  .team-box,
+  .team-col,
+  .auto-rank-box,
+  .rank-item,
+  .subject-card,
+  .chart-card,
+  .summary-card,
+  .stat-card,
+  .card,
+  .field,
+  table,
+  tr,
+  tbody tr,
+  .priority-list {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .weak-priority-banner {
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    padding: 14px !important;
+    margin-bottom: 14px !important;
+    background: #ffffff !important;
+  }
+  .priority-item {
+    border: 1px solid #e2e8f0 !important;
+    background: #f8fafc !important;
+    margin-bottom: 6px !important;
+    padding: 8px 12px !important;
+  }
   .subdomain-summary-box {
     border: 1px solid #cbd5e1 !important;
     box-shadow: none !important;

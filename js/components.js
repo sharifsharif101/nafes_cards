@@ -315,8 +315,29 @@ const SECTION_BUILDERS = {
     
     const recsListUl = el("ul", "recs-list");
     if (section.defaultRecommendations) {
-      section.defaultRecommendations.forEach(recText => {
-        const li = el("li", "rec-item", recText);
+      section.defaultRecommendations.forEach((recText, idx) => {
+        const li = el("li", "rec-item");
+        
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "rec-item-checkbox";
+        checkbox.id = `rec-checkbox-${idx}`;
+        
+        const textSpan = el("span", "rec-item-text", recText);
+        
+        li.append(checkbox, textSpan);
+        
+        li.addEventListener("click", (e) => {
+          if (e.target !== checkbox) {
+            checkbox.checked = !checkbox.checked;
+          }
+          li.classList.toggle("selected", checkbox.checked);
+        });
+        
+        checkbox.addEventListener("change", () => {
+          li.classList.toggle("selected", checkbox.checked);
+        });
+
         recsListUl.append(li);
       });
     }

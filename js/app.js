@@ -94,6 +94,7 @@
       }
 
       document.addEventListener("input", () => this.refresh(false));
+      window.addEventListener("beforeprint", () => this.checkPrintRecommendations());
 
       // حفظ موضع التمرير تلقائياً عبر StorageManager
       window.addEventListener("scroll", () => {
@@ -619,7 +620,22 @@
       document.querySelectorAll(".subject-card.collapsed").forEach(card => {
         card.classList.remove("collapsed");
       });
+      this.checkPrintRecommendations();
       window.print();
+    },
+
+    checkPrintRecommendations() {
+      const extraTextarea = document.getElementById("recommendations-extra");
+      if (extraTextarea) {
+        const wrap = extraTextarea.closest(".extra-rec-field");
+        if (wrap) {
+          if (!extraTextarea.value || !extraTextarea.value.trim()) {
+            wrap.classList.add("print-empty");
+          } else {
+            wrap.classList.remove("print-empty");
+          }
+        }
+      }
     },
 
     clearAll() {
