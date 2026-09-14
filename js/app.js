@@ -468,19 +468,19 @@
           });
 
           const highAdminText = highest.adminVal !== null
-            ? (highest.schoolVal - highest.adminVal >= 0 ? "" : "-") + Math.abs(highest.schoolVal - highest.adminVal).toFixed(1)
+            ? (highest.schoolVal - highest.adminVal >= 0 ? "" : "-") + Math.abs(highest.schoolVal - highest.adminVal).toFixed(1) + "%"
             : "—";
 
           const highKingdomText = highest.kingdomVal !== null
-            ? (highest.schoolVal - highest.kingdomVal >= 0 ? "" : "-") + Math.abs(highest.schoolVal - highest.kingdomVal).toFixed(1)
+            ? (highest.schoolVal - highest.kingdomVal >= 0 ? "" : "-") + Math.abs(highest.schoolVal - highest.kingdomVal).toFixed(1) + "%"
             : "—";
 
           const lowAdminText = lowest.adminVal !== null
-            ? Math.abs(lowest.adminVal - lowest.schoolVal).toFixed(1)
+            ? Math.abs(lowest.adminVal - lowest.schoolVal).toFixed(1) + "%"
             : "—";
 
           const lowKingdomText = lowest.kingdomVal !== null
-            ? Math.abs(lowest.kingdomVal - lowest.schoolVal).toFixed(1)
+            ? Math.abs(lowest.kingdomVal - lowest.schoolVal).toFixed(1) + "%"
             : "—";
 
           html += `
@@ -489,40 +489,38 @@
                 <span class="subdomain-summary-badge">${subjectName}</span>
                 <h4 class="subdomain-summary-title">إحصاءات المجال الفرعي الأعلى والأقل مقارنة بـ إدارة التعليم والمملكة</h4>
               </div>
-              <table class="subdomain-hl-table">
-                <thead>
-                  <tr class="row-highest-header">
-                    <th class="col-hl-title bg-highest-head">المجال الفرعي الأعلى</th>
-                    <th class="col-hl-pct bg-highest-head">نسبته</th>
-                    <th class="col-hl-diff-admin bg-purple-head">مقدار ارتفاعه عن مستوى الإدارة</th>
-                    <th class="col-hl-diff-kingdom bg-grey-head">نسبة ارتفاعه عن مستوى المملكة</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="row-highest-body">
-                    <td class="cell-hl-name">${highest.item.label}</td>
-                    <td class="cell-hl-pct">${highest.schoolVal.toFixed(1)}</td>
-                    <td class="cell-hl-diff text-highest">${highAdminText}</td>
-                    <td class="cell-hl-diff text-highest">${highKingdomText}</td>
-                  </tr>
-                </tbody>
-                <thead>
-                  <tr class="row-lowest-header">
-                    <th class="col-hl-title bg-lowest-head">المجال الفرعي الأقل</th>
-                    <th class="col-hl-pct bg-lowest-head">نسبته</th>
-                    <th class="col-hl-diff-admin bg-purple-head">نسبة انخفاضه عن مستوى الإدارة</th>
-                    <th class="col-hl-diff-kingdom bg-grey-head">نسبة انخفاضه عن مستوى المملكة</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="row-lowest-body">
-                    <td class="cell-hl-name">${lowest.item.label}</td>
-                    <td class="cell-hl-pct">${lowest.schoolVal.toFixed(1)}</td>
-                    <td class="cell-hl-diff text-lowest">${lowAdminText}</td>
-                    <td class="cell-hl-diff text-lowest">${lowKingdomText}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="subdomain-cards-grid">
+                <div class="subdomain-stat-card card-best">
+                  <div class="stat-card-label">المجال الأفضل</div>
+                  <div class="stat-card-title">${highest.item.label}</div>
+                  <div class="stat-card-pct">${highest.schoolVal.toFixed(1)}%</div>
+                  <div class="stat-card-details">
+                    <div class="stat-detail-row">
+                      <span class="detail-label">مقدار ارتفاعه عن مستوى الإدارة:</span>
+                      <span class="detail-val text-success-val">${highAdminText}</span>
+                    </div>
+                    <div class="stat-detail-row">
+                      <span class="detail-label">نسبة ارتفاعه عن مستوى المملكة:</span>
+                      <span class="detail-val text-success-val">${highKingdomText}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="subdomain-stat-card card-need-intervention">
+                  <div class="stat-card-label">المجال الذي يحتاج تدخلاً</div>
+                  <div class="stat-card-title">${lowest.item.label}</div>
+                  <div class="stat-card-pct">${lowest.schoolVal.toFixed(1)}%</div>
+                  <div class="stat-card-details">
+                    <div class="stat-detail-row">
+                      <span class="detail-label">نسبة انخفاضه عن مستوى الإدارة:</span>
+                      <span class="detail-val text-danger-val">${lowAdminText}</span>
+                    </div>
+                    <div class="stat-detail-row">
+                      <span class="detail-label">نسبة انخفاضه عن مستوى المملكة:</span>
+                      <span class="detail-val text-danger-val">${lowKingdomText}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           `;
         }
