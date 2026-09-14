@@ -847,27 +847,52 @@ textarea::placeholder {
   font-size: .85rem; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--mauve);
 }
 .team-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; text-align: center;
 }
 .team-col {
   border: 1px dashed var(--ui-border-dark); padding: 14px 10px;
   border-radius: var(--radius-input); background: #fdfdfd;
-  display: flex; flex-direction: column; gap: 10px; justify-content: space-between;
+  display: flex; flex-direction: column; gap: 10px; justify-content: flex-start;
 }
 .team-label {
   font-weight: 700; font-size: .92rem; color: var(--dark-amethyst-2);
+}
+.team-inputs-wrap {
+  display: flex; flex-direction: column; gap: 6px; width: 100%;
 }
 .team-col input {
   width: 100%; padding: 6px 8px; text-align: center; font-size: .88rem;
   border: 1px solid var(--ui-border); border-radius: 4px; font-family: inherit;
 }
-.sig-line {
-  font-size: .78rem; color: var(--text-muted); margin-top: 4px;
+.team-principal-box {
+  margin-top: 16px;
+  border: 1px dashed var(--ui-border-dark);
+  padding: 14px 16px;
+  border-radius: var(--radius-input);
+  background: #fdfdfd;
+  text-align: center;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
 }
-.stamp-box-placeholder {
-  height: 60px; border: 2px dashed #cbd5e1; border-radius: 50%; width: 60px;
-  margin: 0 auto; display: flex; align-items: center; justify-content: center;
-  font-size: .7rem; color: #94a3b8; font-weight: 600; text-align: center;
+.team-principal-box .team-label {
+  font-weight: 700;
+  font-size: .92rem;
+  color: var(--dark-amethyst-2);
+}
+.team-principal-box input {
+  width: 100%;
+  max-width: 340px;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: .9rem;
+  border: 1px solid var(--ui-border);
+  border-radius: 4px;
+  font-family: inherit;
 }
 
 /* ---------- ذيل الصفحة ---------- */
@@ -1055,6 +1080,19 @@ textarea::placeholder {
   background: #048680;
   transform: translateX(-50%) rotate(45deg);
   border-radius: 2px;
+}
+
+/* العلامة المائية الشفافة في خلفية الغلاف */
+.cover-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -46%);
+  width: 82cqw;
+  height: 82cqw;
+  pointer-events: none;
+  opacity: 0.07;
+  z-index: 0;
 }
 
 .cover-logo-badge {

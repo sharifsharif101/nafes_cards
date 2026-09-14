@@ -362,30 +362,36 @@ const SECTION_BUILDERS = {
     const teamGrid = el("div", "team-grid");
 
     const roles = [
-      { id: "team-supervisors", label: "المشرفون", placeholder: "أسماء المشرفين والصفة" },
-      { id: "team-teachers",    label: "المعلمون",   placeholder: "أسماء المعلمين المنفذين" },
-      { id: "team-principal",   label: "مدير المدرسة", placeholder: "اسم مدير المدرسة" },
+      { id: "team-supervisors", label: "المشرفون", count: 5, placeholderPrefix: "اسم المشرف والصفة" },
+      { id: "team-teachers",    label: "المعلمون",   count: 5, placeholderPrefix: "اسم المعلم المنفذ" },
     ];
 
     roles.forEach(role => {
       const col = el("div", "team-col");
       col.append(el("div", "team-label", role.label));
-      const input = document.createElement("input");
-      input.type = "text";
-      input.id = role.id;
-      input.placeholder = role.placeholder;
-      const sigLine = el("div", "sig-line", "التوقيع: .....................");
-      col.append(input, sigLine);
+
+      const inputsWrap = el("div", "team-inputs-wrap");
+      for (let i = 1; i <= role.count; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = i === 1 ? role.id : `${role.id}-${i}`;
+        input.placeholder = role.count > 1 ? `${role.placeholderPrefix} (${i})` : role.placeholderPrefix;
+        inputsWrap.append(input);
+      }
+      col.append(inputsWrap);
       teamGrid.append(col);
     });
 
-    // الختم الرسمى
-    const stampCol = el("div", "team-col stamp-col");
-    stampCol.append(el("div", "team-label", "الختم الرسمي للمدرسة"));
-    stampCol.append(el("div", "stamp-box-placeholder", "ختم المدرسة"));
-    teamGrid.append(stampCol);
+    // مدير المدرسة بشكل منفصل أسفل الجدول
+    const principalBox = el("div", "team-principal-box");
+    principalBox.append(el("div", "team-label", "مدير المدرسة"));
+    const principalInput = document.createElement("input");
+    principalInput.type = "text";
+    principalInput.id = "team-principal";
+    principalInput.placeholder = "اسم مدير المدرسة";
+    principalBox.append(principalInput);
 
-    teamBox.append(teamGrid);
+    teamBox.append(teamGrid, principalBox);
 
     wrap.append(notesBox, recsBox, teamBox);
     return wrap;

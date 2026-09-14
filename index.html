@@ -25,6 +25,36 @@
       <div class="cover-shape shape-bottom-dark"></div>
       <div class="cover-shape shape-accent"></div>
 
+      <!-- علامة مائية شفافة في خلفية الغلاف مناسبة لسياق نافس والتطوير التعليمي -->
+      <svg class="cover-watermark" viewBox="0 0 500 500" aria-hidden="true">
+        <g fill="none" stroke="#048680">
+          <!-- دوائر هندسية متداخلة -->
+          <circle cx="250" cy="250" r="230" stroke-width="2" stroke-dasharray="10 8" />
+          <circle cx="250" cy="250" r="200" stroke-width="3" />
+          <circle cx="250" cy="250" r="170" stroke-width="1.5" stroke-dasharray="5 5" />
+          <circle cx="250" cy="250" r="140" stroke-width="2" />
+          <circle cx="250" cy="250" r="110" stroke-width="1" />
+
+          <!-- مضلع ثماني هندسي خلفي -->
+          <rect x="140" y="140" width="220" height="220" stroke-width="1.5" rx="8" transform="rotate(0 250 250)" />
+          <rect x="140" y="140" width="220" height="220" stroke-width="1.5" rx="8" transform="rotate(45 250 250)" />
+
+          <!-- رسم بياني وسهم صاعد يعبر عن التقويم والتحسين -->
+          <path d="M140,310 L190,270 L240,290 L300,210 L360,170" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+          <polygon points="360,170 340,175 352,192" fill="#048680" />
+
+          <!-- أعمدة بيانية شفافة خلفية -->
+          <rect x="175" y="275" width="26" height="40" rx="3" fill="#048680" stroke="none" opacity="0.3" />
+          <rect x="225" y="255" width="26" height="60" rx="3" fill="#048680" stroke="none" opacity="0.3" />
+          <rect x="275" y="225" width="26" height="90" rx="3" fill="#048680" stroke="none" opacity="0.3" />
+          <rect x="325" y="185" width="26" height="130" rx="3" fill="#048680" stroke="none" opacity="0.3" />
+
+          <!-- خطوط بوصلة ومحاور متقاطعة -->
+          <line x1="250" y1="20" x2="250" y2="480" stroke-width="1" stroke-dasharray="4 6" />
+          <line x1="20" y1="250" x2="480" y2="250" stroke-width="1" stroke-dasharray="4 6" />
+        </g>
+      </svg>
+
       <div class="cover-logo-badge">
         <img src="img/logo-moe.png" alt="شعار وزارة التعليم ورؤية 2030" class="cover-logo">
       </div>
