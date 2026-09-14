@@ -1236,6 +1236,9 @@ textarea::placeholder {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     overflow: hidden !important;
+    /* يرفع الغلاف فوق شريط التذييل الثابت لإخفائه في صفحة الغلاف فقط */
+    position: relative !important;
+    z-index: 10 !important;
   }
 
   .cover-page,
@@ -1810,7 +1813,12 @@ textarea::placeholder {
   }
 
   .page-footer {
-    margin-top: 12px !important;
+    position: fixed !important;
+    bottom: 6mm !important;
+    left: 12mm !important;
+    right: 12mm !important;
+    width: auto !important;
+    margin-top: 0 !important;
     padding: 8px 12px !important;
     background: #f8fafc !important;
     border: 1px solid #cbd5e1 !important;
