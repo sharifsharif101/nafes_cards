@@ -130,14 +130,13 @@
             const segHeight = botY - topY;
             const centerY = (topY + botY) / 2;
 
-            ctx.fillStyle = "#000000";
-            ctx.textAlign = "center";
             if (segHeight >= 14 && v > 0) {
+              ctx.fillStyle = "#ffffff";
+              ctx.textAlign = "center";
               ctx.textBaseline = "middle";
+              ctx.font = (segHeight < 18 ? "bold 9.5px " : "bold 11px ") + FONT;
+              // رسم ظل خفيف أو نص أبيض/داكن واضح داخل الشريحة
               ctx.fillText(txt, bar.x, centerY);
-            } else if (v > 0) {
-              ctx.textBaseline = "bottom";
-              ctx.fillText(txt, bar.x, topY - 2);
             }
           } else {
             const horizontal = chart.options.indexAxis === "y";

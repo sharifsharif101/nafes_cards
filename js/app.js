@@ -78,12 +78,16 @@
     bindEvents() {
       const printBtn = document.getElementById("btn-print");
       const exportPdfBtn = document.getElementById("btn-export-pdf");
+      const exportLongPdfBtn = document.getElementById("btn-export-long-pdf");
+      const exportLongBtn = document.getElementById("btn-export-long");
       const clearBtn = document.getElementById("btn-clear");
       const toggleCoverBtn = document.getElementById("btn-toggle-cover");
       const coverWrapper = document.getElementById("cover-page-wrapper");
 
       if (printBtn) printBtn.addEventListener("click", () => this.exportPDF());
       if (exportPdfBtn) exportPdfBtn.addEventListener("click", () => this.exportPDF());
+      if (exportLongPdfBtn) exportLongPdfBtn.addEventListener("click", () => this.exportContinuousSheet("pdf"));
+      if (exportLongBtn) exportLongBtn.addEventListener("click", () => this.exportContinuousSheet("png"));
       if (clearBtn) clearBtn.addEventListener("click", () => this.clearAll());
 
       if (toggleCoverBtn && coverWrapper) {
@@ -622,6 +626,192 @@
       });
       this.checkPrintRecommendations();
       window.print();
+    },
+
+    async exportContinuousSheet(format = "pdf") {
+      // 1) التأكد من توفر المكتبات المطلوبة
+      if (typeof html2canvas === "undefined") {
+        try {
+          await new Promise((resolve, reject) => {
+            const s = document.createElement("script");
+            s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+          });
+        } catch (e) {
+          alert("تعذر تحميل أداة التصدير، يرجى التأكد من اتصال الإنترنت والمحاولة مرة أخرى.");
+          return;
+        }
+      }
+
+      if (format === "pdf" && typeof window.jspdf === "undefined" && typeof jsPDF === "undefined") {
+        try {
+          await new Promise((resolve, reject) => {
+            const s = document.createElement("script");
+            s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+          });
+        } catch (e) {
+          alert("تعذر تحميل أداة توليد ملف الـ PDF، يرجى التأكد من اتصال الإنترنت والمحاولة مرة أخرى.");
+          return;
+        }
+      }
+
+      // 2) إنشاء أو إظهار نافذة التحميل
+      let overlay = document.getElementById("export-loading-overlay");
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "export-loading-overlay";
+        overlay.className = "export-loading-overlay";
+        overlay.innerHTML = `
+          <div class="export-loading-box">
+            <div class="export-loading-spinner"></div>
+            <div class="export-loading-title">جاري تجهيز وتصدير الورقة الممتدة...</div>
+            <div class="export-loading-desc">يتم الآن التقاط كافة البيانات والرسوم البيانية وتوليد المستند بجودة فائقة</div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+      }
+      const titleEl = overlay.querySelector(".export-loading-title");
+      if (titleEl) {
+        titleEl.textContent = format === "pdf"
+          ? "جاري إنشاء وتصدير ملف الـ PDF الممتد..."
+          : "جاري تجهيز وتصدير صورة الشيت الممتد...";
+      }
+      overlay.classList.add("active");
+
+      // 3) تجهيز التقرير في وضع الصفحة الواحدة الممتدة
+      const container = document.querySelector(".container");
+      const previousActiveTab = StorageManager.getActiveTab() || TABS[0].id;
+      
+      if (window.ChartEngine) {
+        ChartEngine.closeModal();
+        ChartEngine.printing = true;
+      }
+
+      // فتح جميع الكروت والرسوم البيانية المطوية
+      const collapsedSubjects = [...document.querySelectorAll(".subject-card.collapsed")];
+      collapsedSubjects.forEach(c => c.classList.remove("collapsed"));
+
+      const collapsedCharts = [...document.querySelectorAll(".chart-card.collapsed")];
+      collapsedCharts.forEach(c => {
+        c.classList.remove("collapsed");
+        c.classList.add("print-force-open");
+      });
+      
+      container.classList.add("continuous-export-mode");
+
+      // تحديث وإعادة رسم كل الرسوم البيانية لضمان ظهورها وتصييرها الفوري على الكانفس
+      const values = this.collectValues();
+      if (window.ChartEngine) {
+        ChartEngine.update(values);
+        Object.values(ChartEngine.charts).forEach(item => {
+          if (item && item.chart) {
+            item.chart.resize();
+            item.chart.update("none");
+          }
+        });
+      }
+
+      // مهلة كافية لضمان اكتمال تصيير كافة العناصر والخطوط والمخططات
+      await new Promise(r => setTimeout(r, 650));
+
+      try {
+        const canvas = await html2canvas(container, {
+          scale: 2, // جودة فائقة الدقة 2x
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#f8fafc",
+          logging: false,
+          letterRendering: false,
+          onclone: (clonedDoc) => {
+            // 1. ضبط التباعد بين الحروف للخط العربي لمنع تداخل أو تقطيع الأحرف
+            clonedDoc.querySelectorAll("*").forEach(el => {
+              el.style.letterSpacing = "normal";
+              el.style.wordSpacing = "normal";
+            });
+
+            // 2. نسخ بيكسلات الكانفاس الأصلية إلى النسخة المستنسخة
+            const origCanvases = container.querySelectorAll("canvas");
+            const clonedCanvases = clonedDoc.querySelectorAll("canvas");
+            origCanvases.forEach((orig, idx) => {
+              const clone = clonedCanvases[idx];
+              if (clone && orig && orig.width > 0 && orig.height > 0) {
+                clone.width = orig.width;
+                clone.height = orig.height;
+                const ctx = clone.getContext("2d");
+                if (ctx) ctx.drawImage(orig, 0, 0);
+              }
+            });
+          },
+          ignoreElements: (el) => {
+            return (
+              el.classList.contains("no-print") ||
+              el.classList.contains("tabs-nav-bar") ||
+              el.classList.contains("cover-preview-bar") ||
+              el.classList.contains("export-loading-overlay") ||
+              el.classList.contains("chart-modal-overlay") ||
+              el.id === "btn-toggle-cover"
+            );
+          }
+        });
+
+        // 4) استخراج اسم المدرسة والصف لتسمية الملف
+        const schoolName = (document.getElementById("school")?.value || "").trim().replace(/[\\/:*?"<>|]/g, "");
+        const gradeName = (document.getElementById("grade")?.value || "").trim().replace(/[\\/:*?"<>|]/g, "");
+        const safePrefix = (schoolName ? `${schoolName}_` : "") + (gradeName ? `${gradeName}_` : "");
+        const baseName = `تقرير_نافس_${safePrefix || ""}ورقة_واحدة_ممتدة_1447`;
+
+        if (format === "pdf") {
+          // توليد ملف PDF بصفحة واحدة ممتدة بعرض A4 القياسي (210mm) وبطول محتوى الشيت الفعلي
+          const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (typeof jsPDF !== "undefined" ? jsPDF : null);
+          if (!jsPDFClass) {
+            throw new Error("jsPDF library not available");
+          }
+
+          const pdfWidthMm = 210; // عرض A4 القياسي
+          const pdfHeightMm = (pdfWidthMm / canvas.width) * canvas.height;
+
+          const doc = new jsPDFClass({
+            orientation: "portrait",
+            unit: "mm",
+            format: [pdfWidthMm, pdfHeightMm],
+            compress: true
+          });
+
+          const imgData = canvas.toDataURL("image/jpeg", 0.95);
+          doc.addImage(imgData, "JPEG", 0, 0, pdfWidthMm, pdfHeightMm, undefined, "FAST");
+          doc.save(baseName + ".pdf");
+        } else {
+          // تنزيل الصورة الناتجة مباشرة (PNG)
+          const link = document.createElement("a");
+          link.download = baseName + ".png";
+          link.href = canvas.toDataURL("image/png");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } catch (err) {
+        console.error("Export continuous sheet error:", err);
+        alert("حدث خطأ أثناء محاولة تصدير الورقة الممتدة. يرجى المحاولة مرة أخرى.");
+      } finally {
+        // 5) استعادة الوضع الطبيعي للشاشة
+        container.classList.remove("continuous-export-mode");
+        collapsedSubjects.forEach(c => c.classList.add("collapsed"));
+        collapsedCharts.forEach(c => {
+          c.classList.add("collapsed");
+          c.classList.remove("print-force-open");
+        });
+        if (window.ChartEngine) {
+          ChartEngine.printing = false;
+          ChartEngine.update(values);
+        }
+        this.switchTab(previousActiveTab, false);
+        overlay.classList.remove("active");
+      }
     },
 
     checkPrintRecommendations() {
